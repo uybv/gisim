@@ -5,6 +5,8 @@ import { Weapon } from './weapon';
 import { Artifacts } from './artifacts';
 import { Buff } from './buff';
 
+const MAX_UP_ARTIFACT = 4;
+
 const BASE_CRIT: number = 0.5;
 const BASE_RATE: number = 0.05;
 const BASE_EM: number = 0;
@@ -65,7 +67,7 @@ export class CharacterBase implements ICharacter {
         return this.charInfo?.substat.toLowerCase().includes(SpecializedType.EM) ? (this.charStats?.specialized ?? 0) : BASE_EM;
     }
     get er(): number {
-        return this.charInfo?.substat.toLowerCase().includes(SpecializedType.ER) ? (this.charStats?.specialized ?? 0) : BASE_ER;
+        return BASE_ER + (this.charInfo?.substat.toLowerCase().includes(SpecializedType.ER) ? (this.charStats?.specialized ?? 0) : 0);
     }
 }
 
@@ -184,8 +186,27 @@ export abstract class Character implements ICharacter {
     abstract readonly gobletTypes: ValueType[];
     abstract readonly circletTypes: ValueType[];
     abstract readonly upTypes: ValueType[];
-    abstract get isValid(): boolean;
     abstract upCount: number;
+
+    get isValid(): boolean {
+        let valid = true;
+        this.upTypes.forEach(upt => {
+            let uC = this.artifacts.getUpCount(upt);
+            let maxC = MAX_UP_ARTIFACT * 5;
+            if (this.artifacts.sandsType == upt) {
+                maxC -= MAX_UP_ARTIFACT;
+            }
+            if (this.artifacts.gobletType == upt) {
+                maxC -= MAX_UP_ARTIFACT;
+            }
+            if (this.artifacts.circletType == upt) {
+                maxC -= MAX_UP_ARTIFACT;
+            }
+            if (uC > maxC)
+                valid = false;
+        });
+        return valid;
+    }
 
     getMainStats(): MainStat[] {
         let result: MainStat[] = [];

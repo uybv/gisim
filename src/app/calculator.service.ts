@@ -73,7 +73,6 @@ export class CalculatorService {
       });
       
     });
-    console.log(listBuild);
 
     var result: Damage[] = [];
     listBuild.forEach(b => {
@@ -84,6 +83,8 @@ export class CalculatorService {
       tempChar.artifacts.setUpCounts(b.ups);
       result.push(new Damage(tempChar, enemy));
     });
+
+    console.log(_.first(result));
 
     return result;
   }

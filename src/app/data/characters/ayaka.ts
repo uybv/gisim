@@ -51,7 +51,9 @@ export class Ayaka extends Character {
         return this.talent * this.atk;
     }
 
-    get isValid(): boolean {
+    override get isValid(): boolean {
+        if (!super.isValid)
+            return false;
         if (this.er < 1.35) {
             return false;
         }

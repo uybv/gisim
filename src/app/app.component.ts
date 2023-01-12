@@ -21,8 +21,8 @@ export class AppComponent {
   public damages: Damage[] | undefined;
 
   constructor(public calSrv: CalculatorService) {
-    // this.damages = this.calSrv.getBestBuild(CharacterType.YaeMiko, "crit");
-    // this.damages = this.calSrv.getBestBuild(CharacterType.KamisatoAyaka);
-    this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "crit");
+    //this.damages = this.calSrv.getBestBuild(CharacterType.YaeMiko, "crit");
+    //this.damages = this.calSrv.getBestBuild(CharacterType.KamisatoAyaka);
+    this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "crit", 23);
   }
 }
