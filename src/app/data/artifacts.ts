@@ -11,7 +11,7 @@ export interface IArtifacts {
     getValue(type: ValueType): number;
 }
 
-const UP: Record<ValueType, number> = {
+export const UP: Record<ValueType, number> = {
     [ValueType.AtkFlat]: (13.62 + 15.56 + 17.51 + 19.45) / 4,
     [ValueType.AtkPercent]: (4.08 + 4.66 + 5.25 + 5.83) / 400,
     [ValueType.DefFlat]: (16.20 + 18.52 + 20.83 + 23.15) / 4,
@@ -31,7 +31,7 @@ const UP: Record<ValueType, number> = {
     [ValueType.DefIgnore]: 0
 };
 
-const BASE: Record<ValueType, number> = {
+export const BASE: Record<ValueType, number> = {
     [ValueType.AtkFlat]: 311,
     [ValueType.AtkPercent]: 0.466,
     [ValueType.DefFlat]: 0,

@@ -54,8 +54,8 @@ export class Weapon implements IWeapon {
     };
 
     constructor(
-        private readonly name: string, 
-        private readonly level: number
+        public readonly name: string,
+        public readonly level: number
     ) {
         this.weaponInfo = genshindb.weapons(name);
         this.weaponStats = this.weaponInfo?.stats(level);

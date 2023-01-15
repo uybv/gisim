@@ -2,10 +2,11 @@ import * as _ from 'lodash';
 import * as genshindb from 'genshin-db';
 import { ValueType, CharacterType, SpecializedType, ICharacter, MainStat } from './common';
 import { Weapon } from './weapon';
-import { Artifacts } from './artifacts';
+import { Artifacts, UP } from './artifacts';
 import { Buff } from './buff';
 
-const MAX_UP_ARTIFACT = 4;
+const MAX_UP_ARTIFACT = 3;
+const MAX_UP_CRIT = 23;
 
 const BASE_CRIT: number = 0.5;
 const BASE_RATE: number = 0.05;
@@ -205,6 +206,9 @@ export abstract class Character implements ICharacter {
             if (uC > maxC)
                 valid = false;
         });
+        if ((this.artifacts.getUpCount(ValueType.CritDmg) + this.artifacts.getUpCount(ValueType.CritRate)) > MAX_UP_CRIT) {
+          return false;
+        }
         return valid;
     }
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import * as _ from 'lodash';
 import { CalculatorService } from './calculator.service';
-import { CharacterType } from './data/common';
+import { CharacterType, ValueType } from './data/common';
 import { Damage } from './data/damage';
 
 @Component({
@@ -14,6 +14,19 @@ export class AppComponent {
 
   public viewType: 'best' | 'top' = 'top';
 
+  public upNames: {
+    [key: string]: string
+  } = {
+    [ValueType.AtkPercent]: "%ATK",
+    [ValueType.CritDmg]: "%CRIT",
+    [ValueType.CritRate]: "%RATE",
+    [ValueType.DmgBonus]: "%BONUS",
+    [ValueType.EmFlat]: "EM",
+    [ValueType.Er]: "%ER",
+    [ValueType.HpPercent]: "%HP",
+    [ValueType.DefPercent]: "%DEF"
+  };
+
   public get damage(): Damage | undefined {
     return _.last(this.damages);
   }
@@ -23,6 +36,6 @@ export class AppComponent {
   constructor(public calSrv: CalculatorService) {
     //this.damages = this.calSrv.getBestBuild(CharacterType.YaeMiko, "crit");
     //this.damages = this.calSrv.getBestBuild(CharacterType.KamisatoAyaka);
-    this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "crit", 23);
+    this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "avg", 30, 10);
   }
 }
