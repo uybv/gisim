@@ -7,6 +7,7 @@ import { CharacterType, ValueType } from './data/common';
 import { Character } from './data/character';
 import { Yae } from './data/characters/yae';
 import { Ei } from './data/characters/ei';
+import { Nahida } from './data/characters/nahida';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,9 @@ export class CalculatorService {
     }
     else if (char == CharacterType.RaidenShogun) {
       return new Ei();
+    }
+    else if (char == CharacterType.Nahida) {
+      return new Nahida();
     }
     return undefined;
   }

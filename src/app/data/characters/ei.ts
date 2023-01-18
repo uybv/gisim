@@ -1,6 +1,6 @@
 import { Artifacts } from "../artifacts";
 import { Buff } from "../buff";
-import { Character, CharacterBase } from "../character";
+import { AdditiveType, Character, CharacterBase, TransformativeType } from "../character";
 import { CharacterType, ValueType } from "../common";
 import { Weapon } from "../weapon";
 
@@ -84,11 +84,11 @@ export class Ei extends Character {
     buff.setBuff(ValueType.AtkPercent, 0.2); // Kiem tran kzh
     buff.setBuff(ValueType.DmgBonus, 0.4); // kzh 1000 tinh thong
     buff.setBuff(ValueType.ResistanceReduction, 0.4); // set 4 bong hinh mau xanh
-    
+
 
     // Sara
     buff.setBuff(ValueType.CritDmg, 0.6); // Sara buff crit dmg
-    
+
 
     // Weapon buff
     if (weapon.name == WeaponTypes.EngulfingLightning) {
@@ -146,9 +146,8 @@ export class Ei extends Character {
     return super.normalAtk + this.baseAtk * weaponAtkBuff + weaponAtkFlatBuff; // Vu khi tran, convert ER to Atk
   }
 
-  override get reactionMultiplier(): number {
-    return 1.15;
-    //return 0;
+  override get additiveType(): AdditiveType {
+    return AdditiveType.None;
   }
   get talent(): number {
     return this.Q_ATK_LVLS[this.qLvl - 1] // Q lv13
@@ -166,9 +165,9 @@ export class Ei extends Character {
         return false;
     }
     */
-   if (this.er < 2.2) {
-    return false;
-   }
+    if (this.er < 2.2) {
+      return false;
+    }
     return true;
   }
 

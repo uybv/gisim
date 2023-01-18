@@ -1,7 +1,8 @@
 #tbl-result, .tbl-artifacts, .tbl-top {
     background-color: #222;
     color: #eee;
-    .col-def, .col-hp, .col-flat-dmg, .col-em {
-      display: none;
-    }
+    .col-def { display: none; }
+    .col-hp { display: none; }
+    //.col-flat-dmg { display: none; }
+    //.col-em { display: none; }
 }
