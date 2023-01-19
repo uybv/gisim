@@ -94,7 +94,7 @@ export class Nahida extends Character {
 
   readonly gobletTypes: ValueType[] = [
     //ValueType.AtkPercent,
-    ValueType.DmgBonus,
+    //ValueType.DmgBonus,
     ValueType.EmFlat
   ];
 

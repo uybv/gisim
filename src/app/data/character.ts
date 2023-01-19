@@ -6,7 +6,7 @@ import { Artifacts, UP } from './artifacts';
 import { Buff } from './buff';
 
 const MAX_UP_ARTIFACT = 3;
-const MAX_UP_CRIT = 23;
+const MAX_UP_CV = 23;
 
 const BASE_CRIT: number = 0.5;
 const BASE_RATE: number = 0.05;
@@ -251,7 +251,19 @@ export abstract class Character implements ICharacter {
       if (uC > maxC)
         valid = false;
     });
-    if ((this.artifacts.getUpCount(ValueType.CritDmg) + this.artifacts.getUpCount(ValueType.CritRate)) > MAX_UP_CRIT) {
+
+    var isMaxUp = (): boolean => {
+      for (let t1 of this.upTypes) {
+        for (let t2 of this.upTypes) {
+          if (t1 != t2 && (this.artifacts.getUpCount(t1) + this.artifacts.getUpCount(t2) > MAX_UP_CV)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    if (isMaxUp()) {
      return false;
     }
     return valid;
