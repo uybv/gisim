@@ -83,7 +83,6 @@ export class Ayaka extends Character {
 
   readonly upTypes: ValueType[] = [
     ValueType.AtkPercent,
-    ValueType.AtkFlat,
     ValueType.CritRate,
     ValueType.CritDmg,
     ValueType.Er

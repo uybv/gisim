@@ -28,12 +28,6 @@ export class Nahida extends Character {
     if (weapon.name == WeaponTypes.AThousandFloatingDreams) {
       buff.setBuff(ValueType.DmgBonus, 0.3); // 3 char
     }
-
-    var qbuffEm = this.coreEm * 0.25;
-    if (qbuffEm > 250) {
-      qbuffEm = 250;
-    }
-    buff.setBuff(ValueType.EmFlat, qbuffEm); // Q Nahida
   }
 
   override get dmgBonus(): number {
@@ -57,6 +51,13 @@ export class Nahida extends Character {
       }
     }
     return super.critRate + em2CritRate; // Giác Ngộ Thức Tỉnh
+  }
+  override get em(): number {
+    var qbuffEm = this.coreEm * 0.25;
+    if (qbuffEm > 250) {
+      qbuffEm = 250;
+    }
+    return super.em + qbuffEm;
   }
 
   override get additiveType(): AdditiveType {

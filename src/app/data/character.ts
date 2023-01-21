@@ -234,19 +234,26 @@ export abstract class Character implements ICharacter {
   abstract readonly upTypes: ValueType[];
   abstract upCount: number;
 
+  get maxUpPer(): number {
+    return MAX_UP_ARTIFACT;
+  }
+  get maxUpCv(): number {
+    return MAX_UP_CV;
+  }
+
   get isValid(): boolean {
     let valid = true;
     this.upTypes.forEach(upt => {
       let uC = this.artifacts.getUpCount(upt);
-      let maxC = MAX_UP_ARTIFACT * 5;
+      let maxC = this.maxUpPer * 5;
       if (this.artifacts.sandsType == upt) {
-        maxC -= MAX_UP_ARTIFACT;
+        maxC -= this.maxUpPer;
       }
       if (this.artifacts.gobletType == upt) {
-        maxC -= MAX_UP_ARTIFACT;
+        maxC -= this.maxUpPer;
       }
       if (this.artifacts.circletType == upt) {
-        maxC -= MAX_UP_ARTIFACT;
+        maxC -= this.maxUpPer;
       }
       if (uC > maxC)
         valid = false;
@@ -255,7 +262,7 @@ export abstract class Character implements ICharacter {
     var isMaxUp = (): boolean => {
       for (let t1 of this.upTypes) {
         for (let t2 of this.upTypes) {
-          if (t1 != t2 && (this.artifacts.getUpCount(t1) + this.artifacts.getUpCount(t2) > MAX_UP_CV)) {
+          if (t1 != t2 && (this.artifacts.getUpCount(t1) + this.artifacts.getUpCount(t2) > this.maxUpCv)) {
             return true;
           }
         }

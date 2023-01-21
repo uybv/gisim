@@ -4,41 +4,58 @@ import { AdditiveType, Character, CharacterBase } from "../character";
 import { CharacterType, ValueType } from "../common";
 import { Weapon } from "../weapon";
 
+enum WeaponTypes {
+  KagurasVerity = "Kagura's Verity",
+}
+
 export class Yae extends Character {
 
   constructor() {
     var char = new CharacterBase(CharacterType.YaeMiko, 81);
 
-    var weapon = new Weapon("Kagura's Verity", 90);
+    var weapon = new Weapon(WeaponTypes.KagurasVerity, 90);
 
     var artifacts = new Artifacts(ValueType.AtkPercent, ValueType.DmgBonus, ValueType.CritDmg);
-    // artifacts.setBonus(ValueType.AtkPercent, 0.18); // 18% atk
-    // artifacts.setBonus(ValueType.AtkPercent, 0.18); // 18% atk
-    artifacts.setBonus(ValueType.EmFlat, 80); // 80 em
-    artifacts.setBonus(ValueType.EmFlat, 80); // 80 em
+    artifacts.setBonus(ValueType.AtkPercent, 0.18); // 18% atk
+    artifacts.setBonus(ValueType.AtkPercent, 0.18); // 18% atk
+    //artifacts.setBonus(ValueType.EmFlat, 80); // 80 em
+    //artifacts.setBonus(ValueType.EmFlat, 80); // 80 em
 
     var buff = new Buff();
-    buff.setBuff(ValueType.DmgBonus, 0.12 * 3) // 3 stack
-    buff.setBuff(ValueType.DmgBonus, 0.12); // 12% dmg bonus (on 3 stack)
+    if (weapon.name == WeaponTypes.KagurasVerity) {
+      buff.setBuff(ValueType.DmgBonus, 0.12 * 3) // 3 stack
+      buff.setBuff(ValueType.DmgBonus, 0.12); // 12% dmg bonus (on 3 stack)
+    }
 
     // Nahida buff
     buff.setBuff(ValueType.EmFlat, 200);
 
+    // Bennet tong that
+    buff.setBuff(ValueType.AtkPercent, 0.2);
+
     // Ei Buff
-    buff.setBuff(ValueType.DmgBonus, 90 * 0.3 / 100); // Ei-E
+    //buff.setBuff(ValueType.DmgBonus, 90 * 0.3 / 100); // Ei-E
 
     super(char, weapon, artifacts, buff);
+  }
+
+  override get maxUpCv(): number {
+    return 26;
+  }
+  override get maxUpPer(): number {
+    return 5;
   }
 
   override get dmgBonus(): number {
     return super.dmgBonus + (this.em * 0.0015); // Enlightened Blessing
   }
   override get additiveType(): AdditiveType {
-    return AdditiveType.Aggravate;
+    //return AdditiveType.Aggravate;
+    return AdditiveType.None;
   }
 
   get talent(): number {
-    return 1.7064000368118286; // E Miko
+    return 1.516800045967102; // E Miko
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -47,7 +64,7 @@ export class Yae extends Character {
   override get isValid(): boolean {
     if (!super.isValid)
       return false;
-    if (this.er < 1.35) {
+    if (this.er < 1.3) {
       return false;
     }
     if (this.critRate < 0.75) {

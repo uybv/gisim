@@ -13,6 +13,7 @@ export enum SpecializedType {
 export enum CharacterType {
   Aether = "Aether",
   Albedo = "Albedo",
+  Alhaitham = "Alhaitham",
   Aloy = "Aloy",
   Amber = "Amber",
   AratakiItto = "AratakiItto",
