@@ -9,6 +9,7 @@ import { Yae } from './data/characters/yae';
 import { Ei } from './data/characters/ei';
 import { Nahida } from './data/characters/nahida';
 import { Alhaitham } from './data/characters/alhaitham';
+import { Xingqiu } from './data/characters/xingqiu';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,9 @@ export class CalculatorService {
     }
     else if (char == CharacterType.Alhaitham) {
       return new Alhaitham();
+    }
+    else if (char == CharacterType.Xingqiu) {
+      return new Xingqiu();
     }
     return undefined;
   }

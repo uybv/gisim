@@ -35,9 +35,10 @@ export class AppComponent {
 
   constructor(public calSrv: CalculatorService) {
     //this.damages = this.calSrv.getBestBuild(CharacterType.YaeMiko, "crit", 35, 100);
-    this.damages = this.calSrv.getBestBuild(CharacterType.KamisatoAyaka, "avg", 30, 10);
+    //this.damages = this.calSrv.getBestBuild(CharacterType.KamisatoAyaka, "avg", 30, 10);
     //this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "avg", 30, 10);
     //this.damages = this.calSrv.getBestBuild(CharacterType.Nahida, "avg", 30, 10);
     //this.damages = this.calSrv.getBestBuild(CharacterType.Alhaitham, "crit", 30, 10);
+    this.damages = this.calSrv.getBestBuild(CharacterType.Xingqiu, "avg", 30, 10);
   }
 }
