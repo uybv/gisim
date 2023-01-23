@@ -53,6 +53,14 @@ export enum TransformativeType {
   Burning = "Burning",
 };
 
+export enum AmplifyingType {
+  None = "None",
+  Vaporize = "Vaporize", // Hydro => Pyro
+  Melt = "Melt", // Pyro => Cryo
+  VaporizeReverse = "VaporizeReverse", // Pyro => Hydro
+  MeltReverse = "MeltReverse", // Cryo => Pyro
+}
+
 export const ADDITIVE: {
   [key: string]: number
 } = {
@@ -74,6 +82,16 @@ export const TRANSFORMATIVE: {
   [TransformativeType.Swirl]: 0.6,
   [TransformativeType.Superconduct]: 0.5,
   [TransformativeType.Burning]: 0.25,
+};
+
+export const AMPLIFYING: {
+  [key: string]: number
+} = {
+  [AmplifyingType.None]: 0,
+  [AmplifyingType.Vaporize]: 2.0,
+  [AmplifyingType.Melt]: 2.0,
+  [AmplifyingType.VaporizeReverse]: 1.5,
+  [AmplifyingType.MeltReverse]: 1.5,
 };
 
 export class CharacterBase implements ICharacter {
@@ -222,6 +240,9 @@ export abstract class Character implements ICharacter {
   }
   get transformativeType(): TransformativeType {
     return TransformativeType.None;
+  }
+  get amplifyingType(): AmplifyingType {
+    return AmplifyingType.None;
   }
   get reactionBonus(): number {
     return 0;

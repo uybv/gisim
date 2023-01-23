@@ -13,6 +13,14 @@ export class AppComponent {
   title = 'gisim';
 
   public viewType: 'best' | 'top' = 'top';
+  public dmgType: 'avg' | 'crit' = 'avg';
+  public character: CharacterType = CharacterType.Aether;
+  public subStatCount: number = 30;
+
+  public characterList: CharacterType[] = Object.values(CharacterType);
+  public viewTypeList: string[] = ['best', 'top'];
+  public dmgTypeList: string[] = ['avg', 'crit'];
+  
 
   public upNames: {
     [key: string]: string
@@ -39,6 +47,10 @@ export class AppComponent {
     //this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "avg", 30, 10);
     //this.damages = this.calSrv.getBestBuild(CharacterType.Nahida, "avg", 30, 10);
     //this.damages = this.calSrv.getBestBuild(CharacterType.Alhaitham, "crit", 30, 10);
-    this.damages = this.calSrv.getBestBuild(CharacterType.Xingqiu, "avg", 30, 10);
+    //this.damages = this.calSrv.getBestBuild(CharacterType.Xingqiu, "avg", 30, 10);
+  }
+
+  public onCal(e: any) {
+    this.damages = this.calSrv.getBestBuild(this.character, this.dmgType, this.subStatCount, 10);
   }
 }

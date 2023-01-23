@@ -1,167 +1,219 @@
-<div class="container-fluid p-0">
-  <div class="col-12" *ngIf="viewType == 'best'">
-    <table class="table table-bordered" id="tbl-result">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Base</th>
-          <th>Normal</th>
-          <th>With Buff</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="damage != null">
-        <tr>
-          <td>Atk</td>
-          <td>{{damage.character.baseAtk | number : '1.0-0'}}</td>
-          <td>{{damage.character.normalAtk | number : '1.0-0'}}</td>
-          <td>{{damage.character.atk | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>Def</td>
-          <td>{{damage.character.baseDef | number : '1.0-0'}}</td>
-          <td>{{damage.character.normalDef | number : '1.0-0'}}</td>
-          <td>{{damage.character.def | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>Hp</td>
-          <td>{{damage.character.baseHp | number : '1.0-0'}}</td>
-          <td>{{damage.character.normalHp | number : '1.0-0'}}</td>
-          <td>{{damage.character.hp | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>EM</td>
-          <td colspan="2">{{damage.character.normalEm | number : '1.0-0'}}</td>
-          <td>{{damage.character.em | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>ER</td>
-          <td colspan="2">{{damage.character.normalEr | percent : '1.1-2'}}</td>
-          <td>{{damage.character.er | percent : '1.1-2'}}</td>
-        </tr>
-        <tr>
-          <td>Crit Rate</td>
-          <td colspan="2">{{damage.character.normalCritRate | percent : '1.1-2'}}</td>
-          <td>{{damage.character.critRate | percent : '1.1-2'}}</td>
-        </tr>
-        <tr>
-          <td>Crit Dmg</td>
-          <td colspan="2">{{damage.character.normalCritDmg | percent : '1.1-2'}}</td>
-          <td>{{damage.character.critDmg | percent : '1.1-2'}}</td>
-        </tr>
-        <tr>
-          <td>Bonus Dmg</td>
-          <td colspan="2">{{damage.character.normalDmgBonus | percent : '1.1-2'}}</td>
-          <td>{{damage.character.dmgBonus | percent : '1.1-2'}}</td>
-        </tr>
-        <tr>
-          <td>Flat Dmg</td>
-          <td colspan="3">{{damage.character.flatDmg | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>Dmg Normal</td>
-          <td colspan="3">{{damage.dmgNormal | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>Dmg Crit</td>
-          <td colspan="3">{{damage.dmgCrit | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td>Dmg Avg</td>
-          <td colspan="3">{{damage.dmgAvg | number : '1.0-0'}}</td>
-        </tr>
-        <tr>
-          <td colspan="4">
-            <table class="table table-bordered tbl-artifacts">
-              <thead>
-                <tr>
-                  <th>Sands</th>
-                  <th>Goblet</th>
-                  <th>Circlet</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{damage.character.artifacts.sandsType}}</td>
-                  <td>{{damage.character.artifacts.gobletType}}</td>
-                  <td>{{damage.character.artifacts.circletType}}</td>
-                </tr>
-              </tbody>
-            </table>
-            <table class="table table-bordered tbl-artifacts">
-              <thead>
-                <tr>
-                  <th>Stat</th>
-                  <th>Up Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let k of damage.character.upTypes">
-                  <td>{{upNames[k]}}</td>
-                  <td>{{damage.character.artifacts.getUpCount(k) | number : '1.0-0'}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<div class="container-fluid p-2">
+  <div class="row">
+    <div class="col-2">
+      <div class="form-row">
+        <label class="col-12 col-form-label">Character</label>
+        <div class="col-12">
+          <select [(ngModel)]="character" class="form-control" name="character">
+            <option *ngFor="let char of characterList" [value]="char">{{char}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-row">
+        <label class="col-12 col-form-label">View Type</label>
+        <div class="col-12">
+          <select [(ngModel)]="viewType" class="form-control" name="viewType">
+            <option *ngFor="let vt of viewTypeList" [value]="vt">{{vt}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-row">
+        <label class="col-12 col-form-label">Dmg Type</label>
+        <div class="col-12">
+          <select [(ngModel)]="dmgType" class="form-control" name="dmgType">
+            <option *ngFor="let dmg of dmgTypeList" [value]="dmg">{{dmg}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-row">
+        <label class="col-12 col-form-label">Substat count</label>
+        <div class="col-12">
+          <input type="number" [(ngModel)]="subStatCount" class="form-control" name="subStatCount" />
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-row">
+        <label class="col-12 col-form-label">&nbsp;</label>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" (click)="onCal($event)">Cal</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-12" *ngIf="viewType == 'top'">
-    <table class="table table-bordered tbl-top">
-      <thead>
-        <!--tr>
-          <th class="text-center" colspan="9">Stats</th>
-          <th class="text-center" colspan="3">Damage</th>
-          <th class="text-center" [attr.colspan]="3 + (damage?.character?.upTypes?.length ?? 0)">Artifacts</th>
-        </tr-->
-        <tr>
-          <th class="col-atk text-center" rowspan="2">Atk</th>
-          <th class="col-def text-center" rowspan="2">Def</th>
-          <th class="col-hp text-center" rowspan="2">Hp</th>
-          <th class="col-em text-center" rowspan="2">Em</th>
-          <th class="col-er text-center" rowspan="2">Er</th>
-          <th class="col-crit-rate text-center" rowspan="2">Crit Rate</th>
-          <th class="col-crit-dmg text-center" rowspan="2">Crit Dmg</th>
-          <th class="col-bonus-dmg text-center" rowspan="2">Bonus Dmg</th>
-          <th class="col-flat-dmg text-center" rowspan="2">Flat Dmg</th>
-          <th class="text-center" colspan="3">Dmg</th>
-          <th class="text-center" colspan="3">Artifacts</th>
-          <th *ngIf="!!damage" class="text-center" [attr.colspan]="damage.character.upTypes.length">Up</th>
-        </tr>
-        <tr>
-          <th class="text-center">Normal</th>
-          <th class="text-center">Crit</th>
-          <th class="text-center">Avg</th>
-          <th class="text-center">Sands</th>
-          <th class="text-center">Goblet</th>
-          <th class="text-center">Circlet</th>
-          <ng-container *ngIf="damage != null">
-            <th class="text-center" *ngFor="let k of damage?.character?.upTypes">{{upNames[k]}}</th>
-          </ng-container>
-        </tr>
-      </thead>
-      <tbody *ngIf="damages != null">
-        <tr *ngFor="let d of damages">
-          <td class="col-atk">{{d.character.normalAtk | number : '1.0-0'}} | {{d.character.atk | number : '1.0-0'}}</td>
-          <td class="col-def">{{d.character.normalDef | number : '1.0-0'}} | {{d.character.def | number : '1.0-0'}}</td>
-          <td class="col-hp">{{d.character.normalHp | number : '1.0-0'}} | {{d.character.hp | number : '1.0-0'}}</td>
-          <td class="col-em">{{d.character.normalEm | number : '1.0-0'}} | {{d.character.em | number : '1.0-0'}}</td>
-          <td class="col-er">{{d.character.normalEr | percent : '1.1-1'}} | {{d.character.er | percent : '1.1-1'}}</td>
-          <td class="col-crit-rate">{{d.character.normalCritRate | percent : '1.1-1'}} | {{d.character.critRate | percent : '1.1-1'}}</td>
-          <td class="col-crit-dmg">{{d.character.normalCritDmg | percent : '1.1-1'}} | {{d.character.critDmg | percent : '1.1-1'}}</td>
-          <td class="col-dmg-bonus">{{d.character.normalDmgBonus | percent : '1.1-1'}} | {{d.character.dmgBonus | percent : '1.1-1'}}</td>
-          <td class="col-flat-dmg">{{d.character.flatDmg | number : '1.0-0'}}</td>
-          <td>{{d.dmgNormal | number : '1.0-0'}}</td>
-          <td>{{d.dmgCrit | number : '1.0-0'}}</td>
-          <td>{{d.dmgAvg | number : '1.0-0'}}</td>
-          <td>{{upNames[d.character.artifacts.sandsType]}}</td>
-          <td>{{upNames[d.character.artifacts.gobletType]}}</td>
-          <td>{{upNames[d.character.artifacts.circletType]}}</td>
-          <ng-container *ngIf="damage != null">
-            <td *ngFor="let k of damage.character.upTypes">{{d.character.artifacts.getUpCount(k) | number : '1.0-0'}}</td>
-          </ng-container>
-        </tr>
-      </tbody>
-    </table>
+</div>
+<div class="container-fluid p-0">
+  <div class="row">
+    <div class="col-12" *ngIf="viewType == 'best'">
+      <table class="table table-bordered" id="tbl-result">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Base</th>
+            <th>Normal</th>
+            <th>With Buff</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="damage != null">
+          <tr>
+            <td>Atk</td>
+            <td>{{damage.character.baseAtk | number : '1.0-0'}}</td>
+            <td>{{damage.character.normalAtk | number : '1.0-0'}}</td>
+            <td>{{damage.character.atk | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>Def</td>
+            <td>{{damage.character.baseDef | number : '1.0-0'}}</td>
+            <td>{{damage.character.normalDef | number : '1.0-0'}}</td>
+            <td>{{damage.character.def | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>Hp</td>
+            <td>{{damage.character.baseHp | number : '1.0-0'}}</td>
+            <td>{{damage.character.normalHp | number : '1.0-0'}}</td>
+            <td>{{damage.character.hp | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>EM</td>
+            <td colspan="2">{{damage.character.normalEm | number : '1.0-0'}}</td>
+            <td>{{damage.character.em | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>ER</td>
+            <td colspan="2">{{damage.character.normalEr | percent : '1.1-2'}}</td>
+            <td>{{damage.character.er | percent : '1.1-2'}}</td>
+          </tr>
+          <tr>
+            <td>Crit Rate</td>
+            <td colspan="2">{{damage.character.normalCritRate | percent : '1.1-2'}}</td>
+            <td>{{damage.character.critRate | percent : '1.1-2'}}</td>
+          </tr>
+          <tr>
+            <td>Crit Dmg</td>
+            <td colspan="2">{{damage.character.normalCritDmg | percent : '1.1-2'}}</td>
+            <td>{{damage.character.critDmg | percent : '1.1-2'}}</td>
+          </tr>
+          <tr>
+            <td>Bonus Dmg</td>
+            <td colspan="2">{{damage.character.normalDmgBonus | percent : '1.1-2'}}</td>
+            <td>{{damage.character.dmgBonus | percent : '1.1-2'}}</td>
+          </tr>
+          <tr>
+            <td>Flat Dmg</td>
+            <td colspan="3">{{damage.character.flatDmg | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>Dmg Normal</td>
+            <td colspan="3">{{damage.dmgNormal | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>Dmg Crit</td>
+            <td colspan="3">{{damage.dmgCrit | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td>Dmg Avg</td>
+            <td colspan="3">{{damage.dmgAvg | number : '1.0-0'}}</td>
+          </tr>
+          <tr>
+            <td colspan="4">
+              <table class="table table-bordered tbl-artifacts">
+                <thead>
+                  <tr>
+                    <th>Sands</th>
+                    <th>Goblet</th>
+                    <th>Circlet</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{damage.character.artifacts.sandsType}}</td>
+                    <td>{{damage.character.artifacts.gobletType}}</td>
+                    <td>{{damage.character.artifacts.circletType}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered tbl-artifacts">
+                <thead>
+                  <tr>
+                    <th>Stat</th>
+                    <th>Up Count</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let k of damage.character.upTypes">
+                    <td>{{upNames[k]}}</td>
+                    <td>{{damage.character.artifacts.getUpCount(k) | number : '1.0-0'}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-12" *ngIf="viewType == 'top'">
+      <table class="table table-bordered tbl-top">
+        <thead>
+          <!--tr>
+            <th class="text-center" colspan="9">Stats</th>
+            <th class="text-center" colspan="3">Damage</th>
+            <th class="text-center" [attr.colspan]="3 + (damage?.character?.upTypes?.length ?? 0)">Artifacts</th>
+          </tr-->
+          <tr>
+            <th class="col-atk text-center" rowspan="2">Atk</th>
+            <th class="col-def text-center" rowspan="2">Def</th>
+            <th class="col-hp text-center" rowspan="2">Hp</th>
+            <th class="col-em text-center" rowspan="2">Em</th>
+            <th class="col-er text-center" rowspan="2">Er</th>
+            <th class="col-crit-rate text-center" rowspan="2">Crit Rate</th>
+            <th class="col-crit-dmg text-center" rowspan="2">Crit Dmg</th>
+            <th class="col-bonus-dmg text-center" rowspan="2">Bonus Dmg</th>
+            <th class="col-flat-dmg text-center" rowspan="2">Flat Dmg</th>
+            <th class="text-center" colspan="3">Dmg</th>
+            <th class="text-center" colspan="3">Artifacts</th>
+            <th *ngIf="!!damage" class="text-center" [attr.colspan]="damage.character.upTypes.length">Up</th>
+          </tr>
+          <tr>
+            <th class="text-center">Normal</th>
+            <th class="text-center">Crit</th>
+            <th class="text-center">Avg</th>
+            <th class="text-center">Sands</th>
+            <th class="text-center">Goblet</th>
+            <th class="text-center">Circlet</th>
+            <ng-container *ngIf="damage != null">
+              <th class="text-center" *ngFor="let k of damage?.character?.upTypes">{{upNames[k]}}</th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody *ngIf="damages != null">
+          <tr *ngFor="let d of damages">
+            <td class="col-atk">{{d.character.normalAtk | number : '1.0-0'}} | {{d.character.atk | number : '1.0-0'}}</td>
+            <td class="col-def">{{d.character.normalDef | number : '1.0-0'}} | {{d.character.def | number : '1.0-0'}}</td>
+            <td class="col-hp">{{d.character.normalHp | number : '1.0-0'}} | {{d.character.hp | number : '1.0-0'}}</td>
+            <td class="col-em">{{d.character.normalEm | number : '1.0-0'}} | {{d.character.em | number : '1.0-0'}}</td>
+            <td class="col-er">{{d.character.normalEr | percent : '1.1-1'}} | {{d.character.er | percent : '1.1-1'}}</td>
+            <td class="col-crit-rate">{{d.character.normalCritRate | percent : '1.1-1'}} | {{d.character.critRate | percent : '1.1-1'}}</td>
+            <td class="col-crit-dmg">{{d.character.normalCritDmg | percent : '1.1-1'}} | {{d.character.critDmg | percent : '1.1-1'}}</td>
+            <td class="col-dmg-bonus">{{d.character.normalDmgBonus | percent : '1.1-1'}} | {{d.character.dmgBonus | percent : '1.1-1'}}</td>
+            <td class="col-flat-dmg">{{d.character.flatDmg | number : '1.0-0'}}</td>
+            <td>{{d.dmgNormal | number : '1.0-0'}}</td>
+            <td>{{d.dmgCrit | number : '1.0-0'}}</td>
+            <td>{{d.dmgAvg | number : '1.0-0'}}</td>
+            <td>{{upNames[d.character.artifacts.sandsType]}}</td>
+            <td>{{upNames[d.character.artifacts.gobletType]}}</td>
+            <td>{{upNames[d.character.artifacts.circletType]}}</td>
+            <ng-container *ngIf="damage != null">
+              <td *ngFor="let k of damage.character.upTypes">{{d.character.artifacts.getUpCount(k) | number : '1.0-0'}}</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

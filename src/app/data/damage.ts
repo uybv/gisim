@@ -1,4 +1,4 @@
-import { Character, LEVEL_MULTIPLIER, TRANSFORMATIVE } from "./character";
+import { AMPLIFYING, Character, LEVEL_MULTIPLIER, TRANSFORMATIVE } from "./character";
 import { Enemy } from "./enemy";
 
 export class Damage {
@@ -24,6 +24,9 @@ export class Damage {
   get transformativeReaction(): number {
     return TRANSFORMATIVE[this.character.transformativeType] * LEVEL_MULTIPLIER[this.character.char.level] * (1 + (16 * this.character.em) / (2000 + this.character.em) + this.character.reactionBonus) * this.enemyResMult;
   }
+  get amplifyingReaction(): number {
+    return AMPLIFYING[this.character.amplifyingType] * (1 + (2.78 * this.character.em) / (1400 + this.character.em) + this.character.reactionBonus);
+  }
   get critAvg(): number {
     return 1 + this.character.critRate * this.character.critDmg;
   }
@@ -35,6 +38,7 @@ export class Damage {
       * (1 + this.character.dmgBonus - this.enemy.damageReduction)
       * this.enemyDefMult
       * this.enemyResMult
+      * (this.amplifyingReaction > 1 ? this.amplifyingReaction : 1)
       + this.transformativeReaction;
   }
   get dmgCrit(): number {

@@ -10,6 +10,7 @@ import { Ei } from './data/characters/ei';
 import { Nahida } from './data/characters/nahida';
 import { Alhaitham } from './data/characters/alhaitham';
 import { Xingqiu } from './data/characters/xingqiu';
+import { Klee } from './data/characters/klee';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,9 @@ export class CalculatorService {
     }
     else if (char == CharacterType.Xingqiu) {
       return new Xingqiu();
+    }
+    else if (char == CharacterType.Klee) {
+      return new Klee();
     }
     return undefined;
   }
