@@ -36,7 +36,7 @@ export class AppComponent {
   };
 
   public get damage(): Damage | undefined {
-    return _.last(this.damages);
+    return _.first(this.damages);
   }
 
   public damages: Damage[] | undefined;

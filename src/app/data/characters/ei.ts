@@ -97,7 +97,7 @@ export class Ei extends Character {
       buff.setBuff(ValueType.CritRate, 0.12);
       buff.setBuff(ValueType.CritDmg, 0.28);
     } else if (weapon.name == WeaponTypes.WavebreakersFin) {
-
+      buff.setBuff(ValueType.DmgBonus, 0.24 * (90 + 60 + 80 + 80) / 100);
     }
 
     // Ei Buff
@@ -117,18 +117,11 @@ export class Ei extends Character {
       artifactDmgBonus = 0.75;
     }
 
-    // weapon buff
-    var weaponDmgBonus = 0;
-    if (this.weapon.name == WeaponTypes.WavebreakersFin) {
-      weaponDmgBonus = 0.24 * (90 + 60 + 80 + 80) / 100;
-    }
-
     // Ei convert ER to Dmg bonus
     var eiDmgBonus = (this.er - 1) * 0.4; // Ei, convert 1% ER to 0.4% dmg bonus
 
     return super.dmgBonus
       + artifactDmgBonus // artifact
-      + weaponDmgBonus // weapon
       + eiDmgBonus; // Convert ER to Dmg Bonus
   }
   override get normalAtk(): number {

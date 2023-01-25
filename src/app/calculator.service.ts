@@ -11,6 +11,7 @@ import { Nahida } from './data/characters/nahida';
 import { Alhaitham } from './data/characters/alhaitham';
 import { Xingqiu } from './data/characters/xingqiu';
 import { Klee } from './data/characters/klee';
+import { Yelan } from './data/characters/yelan';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,9 @@ export class CalculatorService {
     }
     else if (char == CharacterType.Klee) {
       return new Klee();
+    }
+    else if (char == CharacterType.Yelan) {
+      return new Yelan();
     }
     return undefined;
   }
