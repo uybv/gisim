@@ -58,7 +58,7 @@ export class Ei extends Character {
   constructor() {
     var char = new CharacterBase(CharacterType.RaidenShogun, 90);
 
-    var weapon = new Weapon(WeaponTypes.EngulfingLightning, 90);
+    var weapon = new Weapon(WeaponTypes.TheCatch, 90);
 
     if (weapon.name == WeaponTypes.StaffOfHoma) {
       weapon.setBonus(ValueType.HpPercent, 0.2);

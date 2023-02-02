@@ -16,11 +16,12 @@ export class AppComponent {
   public dmgType: 'avg' | 'crit' = 'avg';
   public character: CharacterType = CharacterType.Aether;
   public subStatCount: number = 30;
+  public resultCount: number = 10;
 
   public characterList: CharacterType[] = Object.values(CharacterType);
   public viewTypeList: string[] = ['best', 'top'];
   public dmgTypeList: string[] = ['avg', 'crit'];
-  
+
 
   public upNames: {
     [key: string]: string
@@ -51,6 +52,6 @@ export class AppComponent {
   }
 
   public onCal(e: any) {
-    this.damages = this.calSrv.getBestBuild(this.character, this.dmgType, this.subStatCount, 10);
+    this.damages = this.calSrv.getBestBuild(this.character, this.dmgType, this.subStatCount, this.resultCount);
   }
 }

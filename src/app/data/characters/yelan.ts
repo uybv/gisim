@@ -28,10 +28,10 @@ export class Yelan extends Character {
     }
 
     // passive1
-    buff.setBuff(ValueType.HpPercent, 0.12);
-    
+    buff.setBuff(ValueType.HpPercent, 0.18);
+
     // 2 thuy
-    buff.setBuff(ValueType.HpPercent, 0.25);
+    //buff.setBuff(ValueType.HpPercent, 0.25);
 
     super(char, weapon, artifacts, buff);
   }
@@ -67,7 +67,7 @@ export class Yelan extends Character {
         return false;
       }
     }
-    if (this.critRate < 0.75) {
+    if (this.critRate < 0.7) {
       return false;
     }
     return true;
@@ -77,7 +77,7 @@ export class Yelan extends Character {
 
   readonly sandsTypes: ValueType[] = [
     //ValueType.AtkPercent,
-    ValueType.EmFlat,
+    //ValueType.EmFlat,
     ValueType.Er,
     ValueType.HpPercent,
   ];
@@ -85,7 +85,7 @@ export class Yelan extends Character {
   readonly gobletTypes: ValueType[] = [
     //ValueType.AtkPercent,
     ValueType.DmgBonus,
-    ValueType.EmFlat,
+    //ValueType.EmFlat,
     ValueType.HpPercent,
   ];
 
@@ -93,8 +93,7 @@ export class Yelan extends Character {
     //ValueType.AtkPercent,
     ValueType.CritRate,
     ValueType.CritDmg,
-    ValueType.EmFlat,
-    ValueType.Er,
+    //ValueType.EmFlat,
     ValueType.HpPercent,
   ];
 
@@ -104,7 +103,7 @@ export class Yelan extends Character {
     ValueType.CritRate,
     ValueType.CritDmg,
     ValueType.Er,
-    ValueType.EmFlat,
+    //ValueType.EmFlat,
     ValueType.HpPercent,
     //ValueType.HpFlat
   ];

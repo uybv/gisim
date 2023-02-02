@@ -220,8 +220,18 @@ export abstract class Character implements ICharacter {
     return this.normalEr + this.buff.getBuff(ValueType.Er);
   }
   get flatDmg(): number {
-    return this.weapon.getValue(ValueType.FlatDmg) + this.artifacts.getValue(ValueType.FlatDmg) + this.buff.getBuff(ValueType.FlatDmg)
-      + ADDITIVE[this.additiveType] * LEVEL_MULTIPLIER[this.char.level] * (1 + (5 * this.em) / (1200 + this.em) + this.reactionBonus);
+    return this.flatDmgWithoutAdditive + this.flatDmgAdditive;
+  }
+  get flatDmgWithoutAdditive(): number {
+    return this.weapon.getValue(ValueType.FlatDmg)
+      + this.artifacts.getValue(ValueType.FlatDmg)
+      + this.buff.getBuff(ValueType.FlatDmg);
+  }
+  get flatDmgAdditive(): number {
+    if (this.additiveType != AdditiveType.None) {
+      return ADDITIVE[this.additiveType] * LEVEL_MULTIPLIER[this.char.level] * (1 + (5 * this.em) / (1200 + this.em) + this.reactionBonus);
+    }
+    return 0;
   }
   get resistanceReduction(): number {
     return this.weapon.getValue(ValueType.ResistanceReduction) + this.artifacts.getValue(ValueType.ResistanceReduction) + this.buff.getBuff(ValueType.ResistanceReduction);

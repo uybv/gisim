@@ -1,4 +1,4 @@
-import { AMPLIFYING, Character, LEVEL_MULTIPLIER, TRANSFORMATIVE } from "./character";
+import { AdditiveType, AMPLIFYING, AmplifyingType, Character, LEVEL_MULTIPLIER, TRANSFORMATIVE } from "./character";
 import { Enemy } from "./enemy";
 
 export class Damage {
@@ -25,7 +25,9 @@ export class Damage {
     return TRANSFORMATIVE[this.character.transformativeType] * LEVEL_MULTIPLIER[this.character.char.level] * (1 + (16 * this.character.em) / (2000 + this.character.em) + this.character.reactionBonus) * this.enemyResMult;
   }
   get amplifyingReaction(): number {
-    return AMPLIFYING[this.character.amplifyingType] * (1 + (2.78 * this.character.em) / (1400 + this.character.em) + this.character.reactionBonus);
+    return this.character.amplifyingType != AmplifyingType.None
+      ? AMPLIFYING[this.character.amplifyingType] * (1 + (2.78 * this.character.em) / (1400 + this.character.em) + this.character.reactionBonus)
+      : 1;
   }
   get critAvg(): number {
     return 1 + this.character.critRate * this.character.critDmg;
@@ -34,18 +36,59 @@ export class Damage {
     return 1 + this.character.critDmg;
   }
   get dmgNormal(): number {
-    return ((this.character.baseDmg * this.character.specialMultiplier) + this.character.flatDmg) 
+    if (this.character.additiveType != AdditiveType.None) {
+      return (this.dmgNormalWithAdditive + this.dmgNormalWithoutAdditive * 2) / 3;
+    }
+    return this.dmgNormalWithoutAdditive;
+  }
+  get dmgNormalWithAdditive(): number {
+    return ((this.character.baseDmg * this.character.specialMultiplier) + this.character.flatDmg)
       * (1 + this.character.dmgBonus - this.enemy.damageReduction)
       * this.enemyDefMult
       * this.enemyResMult
-      * (this.amplifyingReaction > 1 ? this.amplifyingReaction : 1)
+      * this.amplifyingReaction
+      + this.transformativeReaction;
+  }
+  get dmgNormalWithoutAdditive(): number {
+    return ((this.character.baseDmg * this.character.specialMultiplier) + this.character.flatDmgWithoutAdditive)
+      * (1 + this.character.dmgBonus - this.enemy.damageReduction)
+      * this.enemyDefMult
+      * this.enemyResMult
+      * this.amplifyingReaction
+      + this.transformativeReaction;
+  }
+  get dmgNormalOnlyAdditive(): number {
+    return this.character.flatDmgAdditive
+      * (1 + this.character.dmgBonus - this.enemy.damageReduction)
+      * this.enemyDefMult
+      * this.enemyResMult
+      * this.amplifyingReaction
       + this.transformativeReaction;
   }
   get dmgCrit(): number {
-    return this.dmgNormal * this.crit;
+    if (this.character.additiveType != AdditiveType.None) {
+      return (this.dmgCritWithAdditive + this.dmgCritWithoutAdditive * 2) / 3;
+    }
+    return this.dmgCritWithoutAdditive;
   }
+  get dmgCritWithAdditive(): number {
+    return this.dmgNormalWithAdditive * this.crit;
+  }
+  get dmgCritWithoutAdditive(): number {
+    return this.dmgNormalWithoutAdditive * this.crit;
+  }
+
   get dmgAvg(): number {
-    return this.dmgNormal * this.critAvg;
+    if (this.character.additiveType != AdditiveType.None) {
+      return (this.dmgAvgWithAdditive + this.dmgAvgWithoutAdditive * 2) / 3;
+    }
+    return this.dmgAvgWithoutAdditive;
+  }
+  get dmgAvgWithAdditive(): number {
+    return this.dmgNormalWithAdditive * this.critAvg;
+  }
+  get dmgAvgWithoutAdditive(): number {
+    return this.dmgNormalWithoutAdditive * this.critAvg;
   }
 
 }

@@ -39,19 +39,21 @@ export class Yae extends Character {
     super(char, weapon, artifacts, buff);
   }
 
+  /*
   override get maxUpCv(): number {
     return 26;
   }
   override get maxUpPer(): number {
     return 5;
   }
+  */
 
   override get dmgBonus(): number {
     return super.dmgBonus + (this.em * 0.0015); // Enlightened Blessing
   }
   override get additiveType(): AdditiveType {
-    //return AdditiveType.Aggravate;
-    return AdditiveType.None;
+    return AdditiveType.Aggravate;
+    //return AdditiveType.None;
   }
 
   get talent(): number {
@@ -64,10 +66,10 @@ export class Yae extends Character {
   override get isValid(): boolean {
     if (!super.isValid)
       return false;
-    if (this.er < 1.3) {
+    if (this.er < 1.4) {
       return false;
     }
-    if (this.critRate < 0.75) {
+    if (this.critRate < 0.78) {
       return false;
     }
     return true;
@@ -95,7 +97,7 @@ export class Yae extends Character {
 
   readonly upTypes: ValueType[] = [
     ValueType.AtkPercent,
-    ValueType.AtkFlat,
+    //ValueType.AtkFlat,
     ValueType.CritRate,
     ValueType.CritDmg,
     ValueType.Er,
