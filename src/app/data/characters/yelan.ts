@@ -86,7 +86,7 @@ export class Yelan extends Character {
     //ValueType.AtkPercent,
     ValueType.DmgBonus,
     //ValueType.EmFlat,
-    ValueType.HpPercent,
+    //ValueType.HpPercent,
   ];
 
   readonly circletTypes: ValueType[] = [

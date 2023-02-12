@@ -28,10 +28,14 @@ export class Yae extends Character {
     }
 
     // Nahida buff
-    buff.setBuff(ValueType.EmFlat, 200);
+    //buff.setBuff(ValueType.EmFlat, 200);
 
     // Bennet tong that
-    buff.setBuff(ValueType.AtkPercent, 0.2);
+    //buff.setBuff(ValueType.AtkPercent, 0.2);
+
+    // Yelan tieng tho dai vo tan
+    //buff.setBuff(ValueType.AtkPercent, 0.2);
+    //buff.setBuff(ValueType.EmFlat, 200);
 
     // Ei Buff
     //buff.setBuff(ValueType.DmgBonus, 90 * 0.3 / 100); // Ei-E
@@ -39,21 +43,19 @@ export class Yae extends Character {
     super(char, weapon, artifacts, buff);
   }
 
-  /*
   override get maxUpCv(): number {
     return 26;
   }
   override get maxUpPer(): number {
     return 5;
   }
-  */
 
   override get dmgBonus(): number {
     return super.dmgBonus + (this.em * 0.0015); // Enlightened Blessing
   }
   override get additiveType(): AdditiveType {
-    return AdditiveType.Aggravate;
-    //return AdditiveType.None;
+    //return AdditiveType.Aggravate;
+    return AdditiveType.None;
   }
 
   get talent(): number {

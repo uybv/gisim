@@ -23,6 +23,8 @@ export class Alhaitham extends Character {
 
     var artifacts = new Artifacts(ValueType.AtkPercent, ValueType.DmgBonus, ValueType.CritDmg);
     artifacts.setBonus(ValueType.DmgBonus, 0.15); // 15% st thao
+    //artifacts.setBonus(ValueType.EmFlat, 80); // 80 tinh thong
+    //artifacts.setBonus(ValueType.EmFlat, 80); // 80 tinh thong
     artifacts.setBonus(ValueType.ResistanceReduction, 0.3); // giam khang 30%
 
     var buff = new Buff();
