@@ -33,7 +33,12 @@ export class AppComponent {
     [ValueType.EmFlat]: "EM",
     [ValueType.Er]: "%ER",
     [ValueType.HpPercent]: "%HP",
-    [ValueType.DefPercent]: "%DEF"
+    [ValueType.DefPercent]: "%DEF",
+    [ValueType.AtkFlat]: "ATK",
+    [ValueType.DefFlat]: "DEF",
+    [ValueType.FlatDmg]: "FLAT DMG",
+    [ValueType.HealBonus]: "%Heal",
+    [ValueType.HpFlat]: "HP",
   };
 
   public get damage(): Damage | undefined {
@@ -43,12 +48,6 @@ export class AppComponent {
   public damages: Damage[] | undefined;
 
   constructor(public calSrv: CalculatorService) {
-    //this.damages = this.calSrv.getBestBuild(CharacterType.YaeMiko, "crit", 35, 100);
-    //this.damages = this.calSrv.getBestBuild(CharacterType.KamisatoAyaka, "avg", 30, 10);
-    //this.damages = this.calSrv.getBestBuild(CharacterType.RaidenShogun, "avg", 30, 10);
-    //this.damages = this.calSrv.getBestBuild(CharacterType.Nahida, "avg", 30, 10);
-    //this.damages = this.calSrv.getBestBuild(CharacterType.Alhaitham, "crit", 30, 10);
-    //this.damages = this.calSrv.getBestBuild(CharacterType.Xingqiu, "avg", 30, 10);
   }
 
   public onCal(e: any) {
