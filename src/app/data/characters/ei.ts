@@ -58,7 +58,7 @@ export class Ei extends Character {
   constructor() {
     var char = new CharacterBase(CharacterType.RaidenShogun, 90);
 
-    var weapon = new Weapon(WeaponTypes.TheCatch, 90);
+    var weapon = new Weapon(WeaponTypes.EngulfingLightning, 90);
 
     if (weapon.name == WeaponTypes.StaffOfHoma) {
       weapon.setBonus(ValueType.HpPercent, 0.2);
@@ -95,7 +95,7 @@ export class Ei extends Character {
       buff.setBuff(ValueType.Er, 0.3); // Kiem tran sau khi Q
     } else if (weapon.name == WeaponTypes.TheCatch) {
       buff.setBuff(ValueType.CritRate, 0.12);
-      buff.setBuff(ValueType.CritDmg, 0.28);
+      buff.setBuff(ValueType.DmgBonus, 0.32);
     } else if (weapon.name == WeaponTypes.WavebreakersFin) {
       buff.setBuff(ValueType.DmgBonus, 0.24 * (90 + 60 + 80 + 80) / 100);
     }

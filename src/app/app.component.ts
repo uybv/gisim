@@ -13,14 +13,14 @@ export class AppComponent {
   title = 'gisim';
 
   public viewType: 'best' | 'top' = 'top';
-  public dmgType: 'avg' | 'crit' = 'avg';
+  public dmgType: 'avg' | 'crit' | 'best' = 'avg';
   public character: CharacterType = CharacterType.Aether;
   public subStatCount: number = 30;
   public resultCount: number = 10;
 
   public characterList: CharacterType[] = Object.values(CharacterType);
   public viewTypeList: string[] = ['best', 'top'];
-  public dmgTypeList: string[] = ['avg', 'crit'];
+  public dmgTypeList: string[] = ['avg', 'crit', 'best'];
 
 
   public upNames: {

@@ -12,6 +12,7 @@ import { Alhaitham } from './data/characters/alhaitham';
 import { Xingqiu } from './data/characters/xingqiu';
 import { Klee } from './data/characters/klee';
 import { Yelan } from './data/characters/yelan';
+import { Xiangling } from './data/characters/xiangling';
 
 @Injectable({
   providedIn: 'root'
@@ -45,10 +46,13 @@ export class CalculatorService {
     else if (char == CharacterType.Yelan) {
       return new Yelan();
     }
+    else if (char == CharacterType.Xiangling) {
+      return new Xiangling();
+    }
     return undefined;
   }
 
-  public getBestBuild(charType: CharacterType, dmgType: 'avg' | 'crit' = 'avg', upCount: number = 31, buildCount: number = 20): Damage[] | undefined {
+  public getBestBuild(charType: CharacterType, dmgType: 'avg' | 'crit' | 'best' = 'avg', upCount: number = 31, buildCount: number = 20): Damage[] | undefined {
     var checkChar = this.getCharacter(charType);
     if (!checkChar) {
       return undefined;
@@ -58,7 +62,6 @@ export class CalculatorService {
     var enemy = new Enemy();
     var damage = new Damage(character, enemy);
 
-    let bestDmg = 0;
     let listBuild: {
       sandType: ValueType,
       gobletType: ValueType,
@@ -70,32 +73,64 @@ export class CalculatorService {
     character.upCount = upCount;
     const subStats = character.getSubStats();
     const mainStats = character.getMainStats();
+
+    let bestDmg = 0;
+    let bestByMains: {
+      [key: string]: number
+    } = {};
+    
+
     mainStats.forEach(main => {
       character.artifacts.sandsType = main.sandType;
       character.artifacts.gobletType = main.gobletType;
       character.artifacts.circletType = main.circletType;
+      var bKey = main.sandType + "_" + main.gobletType + "_" + main.circletType;
+      bestByMains[bKey] = 0;
       subStats.forEach(subStat => {
         character.artifacts.setUpCounts(subStat);
-        if (character.isValid && (dmgType == 'avg' ? (bestDmg < damage.dmgAvg) : (bestDmg < damage.dmgCrit))) {
-          listBuild.push({
-            sandType: character.artifacts.sandsType,
-            gobletType: character.artifacts.gobletType,
-            circletType: character.artifacts.circletType,
-            ups: _.clone(character.artifacts.upCounts),
-            dmg: dmgType == 'avg' ? damage.dmgAvg : damage.dmgCrit
-          });
-          listBuild = listBuild.sort((a, b) => {
-            return a.dmg < b.dmg ? 1 : -1;
-          });
-          listBuild = listBuild.slice(0, buildCount);
-          bestDmg = _.last(listBuild)?.dmg ?? 0;
+        if (character.isValid) {
+          if (dmgType == 'best') {
+            if (bestByMains[bKey] < damage.dmgAvg) {
+              if (bestByMains[bKey] == 0) {
+                listBuild.push({
+                  sandType: character.artifacts.sandsType,
+                  gobletType: character.artifacts.gobletType,
+                  circletType: character.artifacts.circletType,
+                  ups: _.clone(character.artifacts.upCounts),
+                  dmg: damage.dmgAvg
+                });
+              } else {
+                listBuild[listBuild.length - 1] = {
+                  sandType: character.artifacts.sandsType,
+                  gobletType: character.artifacts.gobletType,
+                  circletType: character.artifacts.circletType,
+                  ups: _.clone(character.artifacts.upCounts),
+                  dmg: damage.dmgAvg
+                };
+              }
+              bestByMains[bKey] = damage.dmgAvg;
+            }
+          } else if (dmgType == 'avg' ? (bestDmg < damage.dmgAvg) : (bestDmg < damage.dmgCrit)) {
+            listBuild.push({
+              sandType: character.artifacts.sandsType,
+              gobletType: character.artifacts.gobletType,
+              circletType: character.artifacts.circletType,
+              ups: _.clone(character.artifacts.upCounts),
+              dmg: dmgType == 'avg' ? damage.dmgAvg : damage.dmgCrit
+            });
+            listBuild = listBuild.sort((a, b) => {
+              return a.dmg < b.dmg ? 1 : -1;
+            });
+            listBuild = listBuild.slice(0, buildCount);
+            bestDmg = _.last(listBuild)?.dmg ?? 0;
+          }
         }
       });
       
     });
 
     var result: Damage[] = [];
-    listBuild.forEach(b => {
+    listBuild.sort((a, b) => a.dmg < b.dmg ? 1 : -1).forEach(b => {
       var tempChar = this.getCharacter(charType) as Character;
       tempChar.artifacts.sandsType = b.sandType;
       tempChar.artifacts.gobletType = b.gobletType;
