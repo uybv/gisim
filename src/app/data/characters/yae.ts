@@ -43,13 +43,6 @@ export class Yae extends Character {
     super(char, weapon, artifacts, buff);
   }
 
-  override get maxUpCv(): number {
-    return 26;
-  }
-  override get maxUpPer(): number {
-    return 5;
-  }
-
   override get dmgBonus(): number {
     return super.dmgBonus + (this.em * 0.0015); // Enlightened Blessing
   }

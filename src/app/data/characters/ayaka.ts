@@ -22,7 +22,7 @@ export class Ayaka extends Character {
     var buff = new Buff();
     buff.setBuff(ValueType.DmgBonus, 0.18);    // Ayaka A1
     buff.setBuff(ValueType.CritRate, 0.15);    // team 2 bang
-    buff.setBuff(ValueType.CritRate, 0.40);    // set 4 bang
+    buff.setBuff(ValueType.CritRate, 0.20);    // set 4 bang
     buff.setBuff(ValueType.DmgBonus, 0.28);    // 3 stack asdsm
 
     // Kokomi
@@ -32,11 +32,11 @@ export class Ayaka extends Character {
     // Kazuha
     buff.setBuff(ValueType.AtkPercent, 0.20);   // kazuha kiem tran
     buff.setBuff(ValueType.DmgBonus, 0.40);    // kazuha 1000 em
-    //buff.setBuff(ValueType.EmFlat, 200);    // kazuha C2
+    buff.setBuff(ValueType.EmFlat, 200);    // kazuha C2
     buff.setBuff(ValueType.ResistanceReduction, 0.40); // set 4 bong hinh mau xanh
 
     // + Shenhe
-    buff.setBuff(ValueType.FlatDmg, 2600);   // shenhe buff flat dmg
+    buff.setBuff(ValueType.FlatDmg, 2800);   // shenhe buff flat dmg
     buff.setBuff(ValueType.ResistanceReduction, 0.15); // shenhe giam khang bang
     buff.setBuff(ValueType.DmgBonus, 0.15);    // shenhe buff st bang
     buff.setBuff(ValueType.DmgBonus, 0.15);    // shenhe buff st ky nang
@@ -59,6 +59,9 @@ export class Ayaka extends Character {
     if (!super.isValid)
       return false;
     if (this.er < 1.35) {
+      return false;
+    }
+    if (this.critRate < 0.75) {
       return false;
     }
     return true;
