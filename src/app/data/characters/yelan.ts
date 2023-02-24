@@ -12,43 +12,59 @@ enum WeaponTypes {
 
 export class Yelan extends Character {
 
+  private artifactType: 'set4' | 'mix' = 'set4';
+  private isC1: boolean = true;
+  private isDouble: boolean = false;
+
   constructor() {
-    var char = new CharacterBase(CharacterType.Yelan, 81);
+    var char = new CharacterBase(CharacterType.Yelan, 90);
     var weapon = new Weapon(WeaponTypes.AquaSimulacra, 90);
-    if (weapon.name == WeaponTypes.AquaSimulacra) {
-      weapon.setBonus(ValueType.HpPercent, 0.16); // 16% HP
-    }
-
     var artifacts = new Artifacts(ValueType.AtkPercent, ValueType.DmgBonus, ValueType.CritDmg);
-    artifacts.setBonus(ValueType.Er, 0.2); // 20% Er
-
     var buff = new Buff();
-    if (weapon.name == WeaponTypes.AquaSimulacra) {
-      buff.setBuff(ValueType.DmgBonus, 0.2); // 20% dmg bonus
-    }
-
-    // passive1
-    buff.setBuff(ValueType.HpPercent, 0.18);
-
-    // 2 thuy
-    //buff.setBuff(ValueType.HpPercent, 0.25);
 
     super(char, weapon, artifacts, buff);
+
+    if (weapon.name == WeaponTypes.AquaSimulacra) {
+      buff.setBuff(ValueType.DmgBonus, 0.2); // 20% dmg bonus
+      buff.setBuff(ValueType.HpPercent, 0.16); // 16% HP
+    }
+
+    if (this.isDouble) {
+      // passive1
+      buff.setBuff(ValueType.HpPercent, 0.18);
+      // 2 thuy
+      buff.setBuff(ValueType.HpPercent, 0.25);
+    } else {
+      // passive1
+      buff.setBuff(ValueType.HpPercent, 0.18);
+    }
+
+    if (this.artifactType == "set4") {
+      artifacts.setBonus(ValueType.Er, 0.2); // 20% Er
+    } else {
+      artifacts.setBonus(ValueType.DmgBonus, 0.15); // 2 thuy
+      artifacts.setBonus(ValueType.HpPercent, 0.2); // 2 hp
+    }
   }
 
   override get dmgBonus(): number {
-    // Set 4 dau an
-    var artifactDmgBonus = this.er * 0.25;
-    if (artifactDmgBonus > 0.75) {
-      artifactDmgBonus = 0.75;
+    if (this.artifactType == "set4") {
+      // Set 4 dau an
+      var artifactDmgBonus = this.er * 0.25;
+      if (artifactDmgBonus > 0.75) {
+        artifactDmgBonus = 0.75;
+      }
+      return super.dmgBonus + artifactDmgBonus; // artifact
+    } else {
+      return super.dmgBonus;
     }
-
-    return super.dmgBonus
-      + artifactDmgBonus; // artifact
   }
 
   get talent(): number {
-    return 0.07795199751853943; // Q lv8
+    var talentParams = this.char.talentQ?.attributes.parameters;
+    return talentParams 
+      ? talentParams["param2"][this.talentLevel - 1] 
+      : 0;
   }
   get baseDmg(): number {
     return this.talent * this.hp;
@@ -59,21 +75,19 @@ export class Yelan extends Character {
       return false;
     }
     if (this.weapon.name == WeaponTypes.FavoniusWarbow) {
-      if (this.er < 1.85) {
+      if (this.er < (1.85 * (this.isC1 ? 0.8 : 1))) {
         return false;
       }
     } else {
-      if (this.er < 1.95) {
+      if (this.er < (2.1 * (this.isC1 ? 0.8 : 1))) {
         return false;
       }
     }
-    if (this.critRate < 0.7) {
+    if (this.critRate < 0.80) {
       return false;
     }
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     //ValueType.AtkPercent,
@@ -86,7 +100,7 @@ export class Yelan extends Character {
     //ValueType.AtkPercent,
     ValueType.DmgBonus,
     //ValueType.EmFlat,
-    //ValueType.HpPercent,
+    ValueType.HpPercent,
   ];
 
   readonly circletTypes: ValueType[] = [

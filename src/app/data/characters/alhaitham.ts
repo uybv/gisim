@@ -37,12 +37,17 @@ export class Alhaitham extends Character {
   }
 
   get talent(): number {
-    return 1.9456000328063965; // lv8
+    return 0;
   }
   get baseDmg(): number {
-    //return 1.9456000328063965 * this.atk + 1.556480050086975 * this.em;
-    return 1.0751999616622925 * this.atk + 2.150399923324585 * this.em;
-    //return 1.510395 * this.atk + 1.853435 * this.em;
+    var talentParams = this.char.talentE?.attributes.parameters;
+    var scaleByAtk = talentParams
+      ? talentParams["param8"][this.talentLevel - 1]
+      : 0;
+    var scaleByEm = talentParams
+      ? talentParams["param9"][this.talentLevel - 1]
+      : 0;
+    return scaleByAtk * this.atk + scaleByEm * this.em;
   }
   override get flatDmg(): number {
     var weaponBuffFlatDmg = 0;
@@ -75,8 +80,6 @@ export class Alhaitham extends Character {
     }
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,

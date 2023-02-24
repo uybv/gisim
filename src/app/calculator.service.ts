@@ -52,7 +52,12 @@ export class CalculatorService {
     return undefined;
   }
 
-  public getBestBuild(charType: CharacterType, dmgType: 'avg' | 'crit' | 'best' = 'avg', upCount: number = 31, buildCount: number = 20): Damage[] | undefined {
+  public getBestBuild(
+      charType: CharacterType,
+      dmgType: 'avg' | 'crit' | 'best' = 'avg',
+      upCount: number = 31,
+      maxTotalCv: number = 200,
+      buildCount: number = 20): Damage[] | undefined {
     var checkChar = this.getCharacter(charType);
     if (!checkChar) {
       return undefined;
@@ -71,6 +76,7 @@ export class CalculatorService {
     }[] = [];
 
     character.upCount = upCount;
+    character.maxTotalCv = maxTotalCv;
     const subStats = character.getSubStats();
     const mainStats = character.getMainStats();
 

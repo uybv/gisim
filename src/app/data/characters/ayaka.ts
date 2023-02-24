@@ -1,4 +1,4 @@
-import { Artifacts } from "../artifacts";
+import { Artifacts, UP } from "../artifacts";
 import { Buff } from "../buff";
 import { Character, CharacterBase } from "../character";
 import { CharacterType, ValueType } from "../common";
@@ -31,14 +31,14 @@ export class Ayaka extends Character {
 
     // Kazuha
     buff.setBuff(ValueType.AtkPercent, 0.20);   // kazuha kiem tran
-    buff.setBuff(ValueType.DmgBonus, 0.40);    // kazuha 1000 em
+    buff.setBuff(ValueType.DmgBonus, 0.38);    // kazuha 950 em
     buff.setBuff(ValueType.EmFlat, 200);    // kazuha C2
     buff.setBuff(ValueType.ResistanceReduction, 0.40); // set 4 bong hinh mau xanh
 
     // + Shenhe
-    buff.setBuff(ValueType.FlatDmg, 2800);   // shenhe buff flat dmg
-    buff.setBuff(ValueType.ResistanceReduction, 0.15); // shenhe giam khang bang
-    buff.setBuff(ValueType.DmgBonus, 0.15);    // shenhe buff st bang
+    buff.setBuff(ValueType.FlatDmg, 3080);   // shenhe buff flat dmg
+    buff.setBuff(ValueType.ResistanceReduction, 0.13); // shenhe giam khang bang
+    buff.setBuff(ValueType.DmgBonus, 0.13);    // shenhe buff st bang
     buff.setBuff(ValueType.DmgBonus, 0.15);    // shenhe buff st ky nang
     buff.setBuff(ValueType.AtkPercent, 0.20);   // shenhe set 4 tong that
 
@@ -49,7 +49,10 @@ export class Ayaka extends Character {
   }
 
   get talent(): number {
-    return 2.021399974822998; // Q-Ayaka lv10
+    var talentParams = this.char.talentQ?.attributes.parameters;
+    return talentParams 
+      ? talentParams["param1"][this.talentLevel - 1] 
+      : 0;
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -58,16 +61,14 @@ export class Ayaka extends Character {
   override get isValid(): boolean {
     if (!super.isValid)
       return false;
-    if (this.er < 1.35) {
+    if (this.er < 1.4) {
       return false;
     }
-    if (this.critRate < 0.75) {
+    if (this.critRate < 0.85) {
       return false;
     }
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,
@@ -85,10 +86,11 @@ export class Ayaka extends Character {
   ];
 
   readonly upTypes: ValueType[] = [
+    ValueType.AtkFlat,
     ValueType.AtkPercent,
     ValueType.CritRate,
     ValueType.CritDmg,
-    ValueType.Er
+    ValueType.Er,
   ];
 }
 

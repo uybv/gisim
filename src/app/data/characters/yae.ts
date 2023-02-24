@@ -50,9 +50,12 @@ export class Yae extends Character {
     //return AdditiveType.Aggravate;
     return AdditiveType.None;
   }
-
+  override talentLevel: number = 8;
   get talent(): number {
-    return 1.516800045967102; // E Miko
+    var talentParams = this.char.talentE?.attributes.parameters;
+    return talentParams 
+      ? talentParams["param3"][this.talentLevel - 1] 
+      : 0;
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -69,8 +72,6 @@ export class Yae extends Character {
     }
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,

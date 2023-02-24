@@ -6,6 +6,7 @@ import { Artifacts, UP } from './artifacts';
 import { Buff } from './buff';
 
 const MAX_UP_STAT: number = 6;
+const ARTIFACT_COUNT: number = 5;
 
 const BASE_CRIT: number = 0.5;
 const BASE_RATE: number = 0.05;
@@ -97,6 +98,7 @@ export class CharacterBase implements ICharacter {
 
   protected readonly charInfo: genshindb.Character | undefined;
   protected readonly charStats: genshindb.StatResult | undefined;
+  protected readonly talents: genshindb.Talent | undefined;
 
   constructor(
     public readonly charType: CharacterType,
@@ -104,6 +106,8 @@ export class CharacterBase implements ICharacter {
   ) {
     this.charInfo = genshindb.characters(charType);
     this.charStats = this.charInfo?.stats(level);
+    this.talents = genshindb.talents(charType);
+    this.talents?.combat3
   }
   get atk(): number {
     return this.charStats?.attack ?? 0;
@@ -128,6 +132,15 @@ export class CharacterBase implements ICharacter {
   }
   get er(): number {
     return BASE_ER + (this.charInfo?.substat.toLowerCase().includes(SpecializedType.ER) ? (this.charStats?.specialized ?? 0) : 0);
+  }
+  get talentN(): genshindb.CombatTalentDetail | undefined {
+    return this.talents?.combat1;
+  }
+  get talentE(): genshindb.CombatTalentDetail | undefined {
+    return this.talents?.combat2;
+  }
+  get talentQ(): genshindb.CombatTalentDetail | undefined {
+    return this.talents?.combat3;
   }
 }
 
@@ -262,44 +275,69 @@ export abstract class Character implements ICharacter {
   abstract readonly gobletTypes: ValueType[];
   abstract readonly circletTypes: ValueType[];
   abstract readonly upTypes: ValueType[];
-  abstract upCount: number;
+  talentLevel: number = 10;
+  upCount: number = 30;
+  maxTotalCv: number = 200;
 
-  private isMainStat(upType: ValueType): boolean {
-    return upType == this.artifacts.sandsType || 
-      upType == this.artifacts.gobletType || 
-      upType == this.artifacts.circletType;
+  private inMainCount(upType: ValueType): number {
+    var mainStats: ValueType[] = [
+      ValueType.HpFlat,
+      ValueType.AtkFlat,
+      this.artifacts.sandsType,
+      this.artifacts.gobletType,
+      this.artifacts.circletType,
+    ];
+    return mainStats.filter(s => s == upType).length;
   }
 
   get isValid(): boolean {
-    var upTypes = this.upTypes.filter(upType => this.artifacts.getUpCount(upType) > 0);
+    if (this.artifacts.totalCv > this.maxTotalCv) {
+      return false;
+    }
+    var upTypes = this.upTypes
+      .filter(upType => this.artifacts.getUpCount(upType) > 0)
+      .sort((a, b) => {
+        var ax = this.inMainCount(a) > 0;
+        var bx = this.inMainCount(b) > 0;
+        if ((ax && bx) || (!ax && !bx)) {
+          return 0;
+        } 
+        if (ax) {
+          return 1;
+        }
+        if (bx) {
+          return -1;
+        }
+        return 0;
+      });
     for (let i1 = 0; i1 < upTypes.length; i1++) {
       var t1Count = this.artifacts.getUpCount(upTypes[i1]);
-      var t1IsMain = this.isMainStat(upTypes[i1]);
-      var max1 = 6 * (t1IsMain ? 4 : 5);
+      var t1InMainCount = this.inMainCount(upTypes[i1]);
+      var max1 = MAX_UP_STAT * (ARTIFACT_COUNT - t1InMainCount);
       if (t1Count > max1) {
         return false;
       }
 
       for (let i2 = i1 + 1; i2 < upTypes.length; i2++) {
         var t2Count = this.artifacts.getUpCount(upTypes[i2]);
-        var t2IsMain = this.isMainStat(upTypes[i2]);
-        var max2 = max1 + (t2IsMain ? 4 : 5) + (t1IsMain ? 1 : 0);
+        var t2InMainCount = this.inMainCount(upTypes[i2]);
+        var max2 = max1 + (ARTIFACT_COUNT - t2InMainCount) + t1InMainCount;
         if (t1Count + t2Count > max2) {
           return false;
         }
 
         for (let i3 = i2 + 1; i3 < upTypes.length; i3++) {
           var t3Count = this.artifacts.getUpCount(upTypes[i3]);
-          var t3IsMain = this.isMainStat(upTypes[i3]);
-          var max3 = max2 + (t3IsMain ? 4 : 5) + (t2IsMain ? 1 : 0);
+          var t3InMainCount = this.inMainCount(upTypes[i3]);
+          var max3 = max2 + (ARTIFACT_COUNT - t3InMainCount) + t2InMainCount;
           if (t1Count + t2Count + t3Count > max3) {
             return false;
           }
 
           for (let i4 = i3 + 1; i4 < upTypes.length; i4++) {
             var t4Count = this.artifacts.getUpCount(upTypes[i4]);
-            var t4IsMain = this.isMainStat(upTypes[i4]);
-            var max4 = max3 + (t4IsMain ? 4 : 5) + (t3IsMain ? 1 : 0);
+            var t4InMainCount = this.inMainCount(upTypes[i4]);
+            var max4 = max3 + (ARTIFACT_COUNT - t4InMainCount) + t3InMainCount;
             if (t1Count + t2Count + t3Count + t4Count > max4) {
               return false;
             }

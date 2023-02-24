@@ -36,7 +36,10 @@ export class Klee extends Character {
     return AmplifyingType.Vaporize;
   }
   get talent(): number {
-    return 2.5177600383758545; // trong kich lv8
+    var talentParams = this.char.talentN?.attributes.parameters;
+    return talentParams 
+      ? talentParams["param4"][this.talentLevel - 1] 
+      : 0;
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -51,8 +54,6 @@ export class Klee extends Character {
     }
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,

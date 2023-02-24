@@ -160,4 +160,7 @@ export class Artifacts implements IArtifacts {
   getValue(type: ValueType): number {
     return this.base[type] + this.getUpValue(type) + this.bonus[type];
   }
+  get totalCv(): number {
+    return (this.getUpCount(ValueType.CritDmg) + this.getUpCount(ValueType.CritRate)) * UP[ValueType.CritDmg] * 100;
+  }
 }

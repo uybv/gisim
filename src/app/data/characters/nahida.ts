@@ -65,10 +65,17 @@ export class Nahida extends Character {
   }
 
   get talent(): number {
-    return 1.6512000560760498; // Nahida E
+    return 0; // Ignore
   }
   get baseDmg(): number {
-    return 1.8575999736785889 * this.atk + 3.7151999473571777 * this.em;
+    var talentParams = this.char.talentE?.attributes.parameters;
+    var scaleByAtk = talentParams
+      ? talentParams["param3"][this.talentLevel - 1]
+      : 0;
+    var scaleByEm = talentParams
+      ? talentParams["param4"][this.talentLevel - 1]
+      : 0;
+    return scaleByAtk * this.atk + scaleByEm * this.em;
   }
 
   override get isValid(): boolean {
@@ -84,8 +91,6 @@ export class Nahida extends Character {
     */
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     //ValueType.AtkPercent,

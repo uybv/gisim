@@ -20,12 +20,14 @@ export class Xingqiu extends Character {
     }
 
     var artifacts = new Artifacts(ValueType.AtkPercent, ValueType.DmgBonus, ValueType.CritDmg);
-    artifacts.setBonus(ValueType.Er, 0.2);
+    //artifacts.setBonus(ValueType.Er, 0.2);
+    artifacts.setBonus(ValueType.DmgBonus, 0.15); // 2 thuy
+    artifacts.setBonus(ValueType.DmgBonus, 0.2); // 2 tong that
 
     var buff = new Buff();
     // Bennet buff
     buff.setBuff(ValueType.AtkPercent, 0.2); // tong that
-    buff.setBuff(ValueType.AtkFlat, 450);
+    buff.setBuff(ValueType.AtkFlat, 800);
 
     // Ei buff
     buff.setBuff(ValueType.DmgBonus, 0.3 * 80 / 100);
@@ -36,7 +38,10 @@ export class Xingqiu extends Character {
     return super.dmgBonus + 0.2; // xingqiu passive2
   }
   get talent(): number {
-    return 0.8683519959449768; // Q lv8
+    var talentParams = this.char.talentQ?.attributes.parameters;
+    return talentParams 
+      ? talentParams["param1"][this.talentLevel - 1] 
+      : 0;
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -45,33 +50,31 @@ export class Xingqiu extends Character {
   override get isValid(): boolean {
     if (!super.isValid)
       return false;
-    if (this.weapon.name == WeaponTypes.SacrificialSword && this.er < 1.85) {
+    if (this.weapon.name == WeaponTypes.SacrificialSword && this.er < 1.65) {
       return false;
-    } else if (this.weapon.name == WeaponTypes.HaranGeppakuFutsu && this.er < 2.2) {
+    } else if (this.weapon.name == WeaponTypes.HaranGeppakuFutsu && this.er < 1.9) {
       return false;
     }
     return true;
   }
 
-  upCount: number = 30;
-
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,
     ValueType.Er,
-    ValueType.EmFlat
+    //ValueType.EmFlat
   ];
 
   readonly gobletTypes: ValueType[] = [
     ValueType.AtkPercent,
     ValueType.DmgBonus,
-    ValueType.EmFlat
+    //ValueType.EmFlat
   ];
 
   readonly circletTypes: ValueType[] = [
     ValueType.AtkPercent,
     ValueType.CritRate,
     ValueType.CritDmg,
-    ValueType.EmFlat
+    //ValueType.EmFlat
   ];
 
   readonly upTypes: ValueType[] = [
@@ -79,7 +82,7 @@ export class Xingqiu extends Character {
     ValueType.CritRate,
     ValueType.CritDmg,
     ValueType.Er,
-    ValueType.EmFlat
+    //ValueType.EmFlat
   ];
 }
 

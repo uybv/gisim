@@ -1,4 +1,4 @@
-import { Artifacts } from "../artifacts";
+import { Artifacts, UP } from "../artifacts";
 import { Buff } from "../buff";
 import { AdditiveType, Character, CharacterBase, TransformativeType } from "../character";
 import { CharacterType, ValueType } from "../common";
@@ -16,44 +16,8 @@ enum WeaponTypes {
 
 export class Ei extends Character {
 
-  private readonly Q_ATK_LVLS = [
-    4.007999897003174,
-    4.308599948883057,
-    4.6092000007629395,
-    5.010000228881836,
-    5.3105998039245605,
-    5.611199855804443,
-    6.01200008392334,
-    6.412799835205078,
-    6.813600063323975,
-    7.214399814605713,
-    7.615200042724609,
-    8.015999794006348,
-    8.517000198364258,
-    9.017999649047852,
-    9.519000053405762
-  ];
-
-  private readonly Q_BUFF_ATK_LVLS = [
-    0.03888000175356865,
-    0.0417959988117218,
-    0.04471199959516525,
-    0.04859999939799309,
-    0.05151600018143654,
-    0.05443200096487999,
-    0.058320000767707825,
-    0.06220800057053566,
-    0.0660960003733635,
-    0.06998399645090103,
-    0.07387199997901917,
-    0.0777600035071373,
-    0.08262000232934952,
-    0.08748000115156174,
-    0.09233999997377396
-  ];
-
-  private readonly qLvl: number = 10;
-  private readonly qStack: number = 60;
+  private readonly qStack: number = 50;
+  private readonly isC2: boolean = true;
 
   constructor() {
     var char = new CharacterBase(CharacterType.RaidenShogun, 90);
@@ -74,21 +38,24 @@ export class Ei extends Character {
     buff.setBuff(ValueType.AtkPercent, 0.25); // 2 hoa
 
     // Bennet buff
-    buff.setBuff(ValueType.AtkFlat, 965); // Bennet atk
+    buff.setBuff(ValueType.AtkFlat, 800); // Bennet atk
     buff.setBuff(ValueType.AtkPercent, 0.20); // Tong that co
+
+    // Yelan buff
+    buff.setBuff(ValueType.DmgBonus, 0.25);
 
     // Nahida buff
     //buff.setBuff(ValueType.EmFlat, 200);
 
     // Kazuha buff
-    buff.setBuff(ValueType.AtkPercent, 0.2); // Kiem tran kzh
-    buff.setBuff(ValueType.DmgBonus, 0.4); // kzh 1000 tinh thong
-    buff.setBuff(ValueType.ResistanceReduction, 0.4); // set 4 bong hinh mau xanh
+    //buff.setBuff(ValueType.AtkPercent, 0.2); // Kiem tran kzh
+    //buff.setBuff(ValueType.DmgBonus, 0.4); // kzh 1000 tinh thong
+    //buff.setBuff(ValueType.ResistanceReduction, 0.4); // set 4 bong hinh mau xanh
 
 
     // Sara
-    buff.setBuff(ValueType.CritDmg, 0.6); // Sara buff crit dmg
-
+    //buff.setBuff(ValueType.CritDmg, 0.6); // Sara buff crit dmg
+    //buff.setBuff(ValueType.AtkFlat, 500);
 
     // Weapon buff
     if (weapon.name == WeaponTypes.EngulfingLightning) {
@@ -105,7 +72,7 @@ export class Ei extends Character {
 
     super(char, weapon, artifacts, buff);
 
-    if (this.qLvl > 10) {
+    if (this.isC2) {
       buff.setBuff(ValueType.DefIgnore, 0.6); // Ei C2
     }
   }
@@ -143,8 +110,11 @@ export class Ei extends Character {
     return AdditiveType.None;
   }
   get talent(): number {
-    return this.Q_ATK_LVLS[this.qLvl - 1] // Q lv13
-      + (this.Q_BUFF_ATK_LVLS[this.qLvl - 1] * this.qStack); // y luc
+    var talentParams = this.char.talentQ?.attributes.parameters;
+    var talentScale = talentParams
+      ? (talentParams["param1"][this.talentLevel - 1] + talentParams["param2"][this.talentLevel - 1] * this.qStack) 
+      : 0;
+    return talentScale;
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -153,18 +123,15 @@ export class Ei extends Character {
   override get isValid(): boolean {
     if (!super.isValid)
       return false;
-    /*
-    if (this.critRate < 0.75) {
+
+    if (this.critRate < 0.69) {
         return false;
     }
-    */
-    if (this.er < 2.2) {
+    if (this.er < 2.95) {
       return false;
     }
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,
@@ -179,9 +146,9 @@ export class Ei extends Character {
   ];
 
   readonly circletTypes: ValueType[] = [
-    ValueType.AtkPercent,
+    //ValueType.AtkPercent,
     ValueType.CritRate,
-    ValueType.CritDmg,
+    //ValueType.CritDmg,
     //ValueType.EmFlat
   ];
 

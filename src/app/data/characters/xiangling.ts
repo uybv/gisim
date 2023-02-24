@@ -46,7 +46,10 @@ export class Xiangling extends Character {
       + artifactDmgBonus; // artifact
   }
   get talent(): number {
-    return 2.0160000324249268; // Q lv10
+    var talentParams = this.char.talentQ?.attributes.parameters;
+    return talentParams 
+      ? talentParams["param4"][this.talentLevel - 1] 
+      : 0;
   }
   get baseDmg(): number {
     return this.talent * this.atk;
@@ -62,8 +65,6 @@ export class Xiangling extends Character {
       return false;
     return true;
   }
-
-  upCount: number = 30;
 
   readonly sandsTypes: ValueType[] = [
     ValueType.AtkPercent,
