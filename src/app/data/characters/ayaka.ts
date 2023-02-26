@@ -10,6 +10,8 @@ enum WeaponTypes {
 
 export class Ayaka extends Character {
 
+  private withShenhe: boolean = true;
+
   constructor() {
     var char = new CharacterBase(CharacterType.KamisatoAyaka, 90);
 
@@ -25,9 +27,7 @@ export class Ayaka extends Character {
     buff.setBuff(ValueType.CritRate, 0.20);    // set 4 bang
     buff.setBuff(ValueType.DmgBonus, 0.28);    // 3 stack asdsm
 
-    // Kokomi
-    buff.setBuff(ValueType.AtkPercent, 0.48);   // kokomi sach rong
-    buff.setBuff(ValueType.AtkPercent, 0.20);   // kokomi set 4 thien nham
+    super(char, weapon, artifacts, buff);
 
     // Kazuha
     buff.setBuff(ValueType.AtkPercent, 0.20);   // kazuha kiem tran
@@ -35,23 +35,37 @@ export class Ayaka extends Character {
     buff.setBuff(ValueType.EmFlat, 200);    // kazuha C2
     buff.setBuff(ValueType.ResistanceReduction, 0.40); // set 4 bong hinh mau xanh
 
-    // + Shenhe
-    buff.setBuff(ValueType.FlatDmg, 3080);   // shenhe buff flat dmg
-    buff.setBuff(ValueType.ResistanceReduction, 0.13); // shenhe giam khang bang
-    buff.setBuff(ValueType.DmgBonus, 0.13);    // shenhe buff st bang
-    buff.setBuff(ValueType.DmgBonus, 0.15);    // shenhe buff st ky nang
-    buff.setBuff(ValueType.AtkPercent, 0.20);   // shenhe set 4 tong that
+    if (this.withShenhe) {
+      // Kokomi
+      buff.setBuff(ValueType.AtkPercent, 0.48);   // kokomi sach rong
+      buff.setBuff(ValueType.AtkPercent, 0.20);   // kokomi set 4 thien nham
+
+      // + Shenhe
+      buff.setBuff(ValueType.FlatDmg, 2300);   // shenhe buff flat dmg
+      buff.setBuff(ValueType.ResistanceReduction, 0.13); // shenhe giam khang bang
+      buff.setBuff(ValueType.DmgBonus, 0.13);    // shenhe buff st bang
+      buff.setBuff(ValueType.DmgBonus, 0.15);    // shenhe buff st ky nang
+      buff.setBuff(ValueType.AtkPercent, 0.20);   // shenhe set 4 tong that
+    } else {
+      // Mona
+      buff.setBuff(ValueType.DmgBonus, 0.6); // tinh di
+      buff.setBuff(ValueType.AtkPercent, 0.2); // thien nham
+      buff.setBuff(ValueType.AtkPercent, 0.48); // sach rong
+
+      // Diona
+      buff.setBuff(ValueType.AtkPercent, 0.2); // tong that
+    }
 
     // + Ganyu
     //buff.setBuff(ValueType.DmgBonus, 0.2);     // Ganyu Q
 
-    super(char, weapon, artifacts, buff);
+
   }
 
   get talent(): number {
     var talentParams = this.char.talentQ?.attributes.parameters;
-    return talentParams 
-      ? talentParams["param1"][this.talentLevel - 1] 
+    return talentParams
+      ? talentParams["param1"][this.talentLevel - 1]
       : 0;
   }
   get baseDmg(): number {
@@ -65,6 +79,9 @@ export class Ayaka extends Character {
       return false;
     }
     if (this.critRate < 0.85) {
+      return false;
+    }
+    if (this.normalAtk > 1805) {
       return false;
     }
     return true;

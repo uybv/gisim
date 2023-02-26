@@ -20,7 +20,7 @@ export class Nahida extends Character {
     artifacts.setBonus(ValueType.ResistanceReduction, 0.3);
 
     var buff = new Buff();
-    
+
     //buff.setBuff(ValueType.DefReduction, 0.3); // Nahida C2
 
     super(char, weapon, artifacts, buff);
@@ -38,7 +38,7 @@ export class Nahida extends Character {
         em2DmgBonus = 0.8;
       }
     }
-    return super.dmgBonus 
+    return super.dmgBonus
       //+ 0.35712000727653503 // Add 2 char hoa
       + em2DmgBonus; // Giác Ngộ Thức Tỉnh
   }
@@ -61,7 +61,7 @@ export class Nahida extends Character {
   }
 
   override get additiveType(): AdditiveType {
-    return AdditiveType.Spread;
+    return AdditiveType.None;
   }
 
   get talent(): number {
@@ -100,7 +100,7 @@ export class Nahida extends Character {
 
   readonly gobletTypes: ValueType[] = [
     //ValueType.AtkPercent,
-    //ValueType.DmgBonus,
+    ValueType.DmgBonus,
     ValueType.EmFlat
   ];
 
