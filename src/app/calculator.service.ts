@@ -21,35 +21,30 @@ export class CalculatorService {
 
   constructor() { }
 
-  private getCharacter(char: CharacterType): Character | undefined {
-    if (char == CharacterType.KamisatoAyaka) {
-      return new Ayaka();
-    } 
-    else if (char == CharacterType.YaeMiko) {
-      return new Yae();
-    }
-    else if (char == CharacterType.RaidenShogun) {
-      return new Ei();
-    }
-    else if (char == CharacterType.Nahida) {
-      return new Nahida();
-    }
-    else if (char == CharacterType.Alhaitham) {
-      return new Alhaitham();
-    }
-    else if (char == CharacterType.Xingqiu) {
-      return new Xingqiu();
-    }
-    else if (char == CharacterType.Klee) {
-      return new Klee();
-    }
-    else if (char == CharacterType.Yelan) {
-      return new Yelan();
-    }
-    else if (char == CharacterType.Xiangling) {
-      return new Xiangling();
-    }
-    return undefined;
+  public get characters(): Character[] {
+    return [
+      new Ayaka(),
+      new Yae(),
+      new Ei(),
+      new Nahida(),
+      new Alhaitham(),
+      new Xingqiu(),
+      new Klee(),
+      new Yelan(),
+      new Xiangling()
+    ];
+  }
+
+  public get characterList(): CharacterType[] {
+    return [
+      CharacterType.KamisatoAyaka,
+      CharacterType.YaeMiko
+    ];
+  }
+
+  private getCharacter(charType: CharacterType, newObj: boolean = false): Character | undefined {
+
+    return this.characters.find(c => c.char.charType == charType);
   }
 
   public getBestBuild(
@@ -79,8 +74,9 @@ export class CalculatorService {
     character.maxTotalCv = maxTotalCv;
     const subStats = character.getSubStats();
     const mainStats = character.getMainStats();
+    console.log(subStats);
+    console.log(mainStats);
 
-    let bestDmg = 0;
     let bestByMains: {
       [key: string]: number
     } = {};
@@ -116,7 +112,7 @@ export class CalculatorService {
               }
               bestByMains[bKey] = damage.dmgAvg;
             }
-          } else if (dmgType == 'avg' ? (bestDmg < damage.dmgAvg) : (bestDmg < damage.dmgCrit)) {
+          } else if (dmgType == 'avg' || dmgType == 'crit') {
             listBuild.push({
               sandType: character.artifacts.sandsType,
               gobletType: character.artifacts.gobletType,
@@ -128,22 +124,22 @@ export class CalculatorService {
               return a.dmg < b.dmg ? 1 : -1;
             });
             listBuild = listBuild.slice(0, buildCount);
-            bestDmg = _.last(listBuild)?.dmg ?? 0;
           }
         }
       });
       
     });
 
-    var result: Damage[] = [];
-    listBuild.sort((a, b) => a.dmg < b.dmg ? 1 : -1).forEach(b => {
-      var tempChar = this.getCharacter(charType) as Character;
-      tempChar.artifacts.sandsType = b.sandType;
-      tempChar.artifacts.gobletType = b.gobletType;
-      tempChar.artifacts.circletType = b.circletType;
-      tempChar.artifacts.setUpCounts(b.ups);
-      result.push(new Damage(tempChar, enemy));
-    });
+    var result: Damage[] = listBuild
+      .sort((a, b) => a.dmg < b.dmg ? 1 : -1)
+      .map(b => {
+        var tempChar = this.getCharacter(charType, true) as Character;
+        tempChar.artifacts.sandsType = b.sandType;
+        tempChar.artifacts.gobletType = b.gobletType;
+        tempChar.artifacts.circletType = b.circletType;
+        tempChar.artifacts.setUpCounts(b.ups);
+        return new Damage(tempChar, enemy);
+      });
 
     console.log(_.first(result));
 

@@ -14,12 +14,12 @@ export class AppComponent {
 
   public viewType: 'best' | 'top' = 'top';
   public dmgType: 'avg' | 'crit' | 'best' = 'avg';
-  public character: CharacterType = CharacterType.Aether;
+  public character: CharacterType = _.first(this.calSrv.characterList) ?? CharacterType.Aether;
   public subStatCount: number = 30;
   public resultCount: number = 10;
   public maxTotalCv: number = 200;
 
-  public characterList: CharacterType[] = Object.values(CharacterType);
+  public characterList: CharacterType[] = this.calSrv.characterList;
   public viewTypeList: string[] = ['best', 'top'];
   public dmgTypeList: string[] = ['avg', 'crit', 'best'];
 

@@ -382,6 +382,14 @@ export abstract class Character implements ICharacter {
 
     let list: number[][] = [];
     this.split(list, [], this.upCount, this.upTypes.length);
+    list = list.filter(ups => {
+      for (let i = 0; i < ups.length; i++) {
+        if (ups[i] > 30) {
+          return false;
+        }
+      }
+      return true;
+    });
     list.forEach(ups => {
       var rd: Record<ValueType, number> = {
         [ValueType.AtkFlat]: 0,
