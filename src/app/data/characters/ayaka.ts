@@ -81,9 +81,11 @@ export class Ayaka extends Character {
     if (this.critRate < 0.85) {
       return false;
     }
+    /*
     if (this.normalAtk > 1805) {
       return false;
     }
+    */
     return true;
   }
 

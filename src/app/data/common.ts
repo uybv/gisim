@@ -112,3 +112,10 @@ export interface MainStat {
   gobletType: ValueType;
   circletType: ValueType;
 }
+
+export enum CalType {
+  Crit = 'crit',
+  Avg = 'avg',
+  MainCrit = 'main-crit',
+  MainAvg = 'main-avg'
+}

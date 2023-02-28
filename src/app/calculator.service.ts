@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Ayaka } from './data/characters/ayaka';
 import { Damage } from './data/damage';
 import { Enemy } from './data/enemy';
-import { CharacterType, ValueType } from './data/common';
+import { CalType, CharacterType, ValueType } from './data/common';
 import { Character } from './data/character';
 import { Yae } from './data/characters/yae';
 import { Ei } from './data/characters/ei';
@@ -21,35 +21,48 @@ export class CalculatorService {
 
   constructor() { }
 
-  public get characters(): Character[] {
-    return [
-      new Ayaka(),
-      new Yae(),
-      new Ei(),
-      new Nahida(),
-      new Alhaitham(),
-      new Xingqiu(),
-      new Klee(),
-      new Yelan(),
-      new Xiangling()
-    ];
-  }
-
   public get characterList(): CharacterType[] {
     return [
       CharacterType.KamisatoAyaka,
-      CharacterType.YaeMiko
-    ];
+      CharacterType.YaeMiko,
+      CharacterType.RaidenShogun,
+      CharacterType.Nahida,
+      CharacterType.Alhaitham,
+      CharacterType.Xingqiu,
+      CharacterType.Klee,
+      CharacterType.Xiangling,
+      CharacterType.Yelan,
+    ].sort();
   }
 
-  private getCharacter(charType: CharacterType, newObj: boolean = false): Character | undefined {
-
-    return this.characters.find(c => c.char.charType == charType);
+  private getCharacter(charType: CharacterType): Character | undefined {
+    switch (charType) {
+      case CharacterType.KamisatoAyaka:
+        return new Ayaka();
+      case CharacterType.YaeMiko:
+        return new Yae();
+      case CharacterType.RaidenShogun:
+        return new Ei();
+      case CharacterType.Nahida:
+        return new Nahida();
+      case CharacterType.Alhaitham:
+        return new Alhaitham();
+      case CharacterType.Xingqiu:
+        return new Xingqiu();
+      case CharacterType.Klee:
+        return new Klee();
+      case CharacterType.Xiangling:
+        return new Xiangling();
+      case CharacterType.Yelan:
+        return new Yelan();
+      default:
+        return undefined;
+    }
   }
 
   public getBestBuild(
       charType: CharacterType,
-      dmgType: 'avg' | 'crit' | 'best' = 'avg',
+      dmgType: CalType = CalType.MainAvg,
       upCount: number = 31,
       maxTotalCv: number = 200,
       buildCount: number = 20): Damage[] | undefined {
@@ -91,15 +104,15 @@ export class CalculatorService {
       subStats.forEach(subStat => {
         character.artifacts.setUpCounts(subStat);
         if (character.isValid) {
-          if (dmgType == 'best') {
-            if (bestByMains[bKey] < damage.dmgAvg) {
+          if (dmgType == CalType.MainAvg || dmgType == CalType.MainCrit) {
+            if (bestByMains[bKey] < (dmgType == CalType.MainAvg ? damage.dmgAvg : damage.dmgCrit)) {
               if (bestByMains[bKey] == 0) {
                 listBuild.push({
                   sandType: character.artifacts.sandsType,
                   gobletType: character.artifacts.gobletType,
                   circletType: character.artifacts.circletType,
                   ups: _.clone(character.artifacts.upCounts),
-                  dmg: damage.dmgAvg
+                  dmg: (dmgType == CalType.MainAvg ? damage.dmgAvg : damage.dmgCrit)
                 });
               } else {
                 listBuild[listBuild.length - 1] = {
@@ -107,18 +120,18 @@ export class CalculatorService {
                   gobletType: character.artifacts.gobletType,
                   circletType: character.artifacts.circletType,
                   ups: _.clone(character.artifacts.upCounts),
-                  dmg: damage.dmgAvg
+                  dmg: (dmgType == CalType.MainAvg ? damage.dmgAvg : damage.dmgCrit)
                 };
               }
-              bestByMains[bKey] = damage.dmgAvg;
+              bestByMains[bKey] = (dmgType == CalType.MainAvg ? damage.dmgAvg : damage.dmgCrit);
             }
-          } else if (dmgType == 'avg' || dmgType == 'crit') {
+          } else if (dmgType == CalType.Avg || dmgType == CalType.Crit) {
             listBuild.push({
               sandType: character.artifacts.sandsType,
               gobletType: character.artifacts.gobletType,
               circletType: character.artifacts.circletType,
               ups: _.clone(character.artifacts.upCounts),
-              dmg: dmgType == 'avg' ? damage.dmgAvg : damage.dmgCrit
+              dmg: dmgType == CalType.Avg ? damage.dmgAvg : damage.dmgCrit
             });
             listBuild = listBuild.sort((a, b) => {
               return a.dmg < b.dmg ? 1 : -1;
@@ -133,7 +146,7 @@ export class CalculatorService {
     var result: Damage[] = listBuild
       .sort((a, b) => a.dmg < b.dmg ? 1 : -1)
       .map(b => {
-        var tempChar = this.getCharacter(charType, true) as Character;
+        var tempChar = this.getCharacter(charType) as Character;
         tempChar.artifacts.sandsType = b.sandType;
         tempChar.artifacts.gobletType = b.gobletType;
         tempChar.artifacts.circletType = b.circletType;

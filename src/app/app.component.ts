@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import * as _ from 'lodash';
 import { CalculatorService } from './calculator.service';
-import { CharacterType, ValueType } from './data/common';
+import { CalType, CharacterType, ValueType } from './data/common';
 import { Damage } from './data/damage';
 
 @Component({
@@ -13,7 +13,7 @@ export class AppComponent {
   title = 'gisim';
 
   public viewType: 'best' | 'top' = 'top';
-  public dmgType: 'avg' | 'crit' | 'best' = 'avg';
+  public dmgType: CalType = CalType.MainAvg;
   public character: CharacterType = _.first(this.calSrv.characterList) ?? CharacterType.Aether;
   public subStatCount: number = 30;
   public resultCount: number = 10;
@@ -21,7 +21,7 @@ export class AppComponent {
 
   public characterList: CharacterType[] = this.calSrv.characterList;
   public viewTypeList: string[] = ['best', 'top'];
-  public dmgTypeList: string[] = ['avg', 'crit', 'best'];
+  public dmgTypeList: string[] = [CalType.Avg, CalType.Crit, CalType.MainAvg, CalType.MainCrit];
 
   public showAtk: boolean = true;
   public showDef: boolean = false;

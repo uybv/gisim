@@ -107,7 +107,6 @@ export class CharacterBase implements ICharacter {
     this.charInfo = genshindb.characters(charType);
     this.charStats = this.charInfo?.stats(level);
     this.talents = genshindb.talents(charType);
-    this.talents?.combat3
   }
   get atk(): number {
     return this.charStats?.attack ?? 0;
